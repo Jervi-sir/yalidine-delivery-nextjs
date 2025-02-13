@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Loader2 } from 'lucide-react';
+import LogoutActionComponent from '../logout';
 
 export default function Form() {
   const router = useRouter();

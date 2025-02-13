@@ -13,10 +13,10 @@ import { Loader2 } from "lucide-react";
 
 export default function Form() {
   const router = useRouter();
-  const [name, setName] = useState(undefined);
-  const [email, setEmail] = useState(undefined);
-  const [password, setPassword] = useState(undefined);
-  const [repeatPassword, setRepeatPassword] = useState(undefined);
+  const [name, setName] = useState('jervi');
+  const [email, setEmail] = useState('gacembekhira@gmail.com');
+  const [password, setPassword] = useState('password');
+  const [repeatPassword, setRepeatPassword] = useState('password');
   const [loading, setLoading] = useState(false);
 
   const fetchRegister = async (e) => {

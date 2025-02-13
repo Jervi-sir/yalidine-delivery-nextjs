@@ -29,7 +29,7 @@ export const LivraisonSection = () => {
 
   // get communes
   useEffect(() => {
-    setData('to_center_center_id', undefined);
+    setData('to_center_id', undefined);
     if (data.to_commune_id === '') return undefined;
     setCenters([])
     axios.get('/api/location/centers', {
@@ -48,7 +48,7 @@ export const LivraisonSection = () => {
         values={[{ id: false, name: 'Commune' }, { id: true, name: 'Stopdesk' }]}
         handleOnValueChange={(value) => {
           setData('to_commune_id', '');
-          setData('to_center_center_id', '');
+          setData('to_center_id', '');
           setCommunes([])
           setCenters([])
           setData('is_stopdesk', value === true);
@@ -62,7 +62,10 @@ export const LivraisonSection = () => {
         placeholder={''}
         values={wilayas}
         initialValue={data.to_wilaya_id}
-        handleOnValueChange={(value) => setData('to_wilaya_id', value)}
+        handleOnValueChange={(value) => {
+          setData('to_wilaya_id', value);
+          setData('to_wilaya_name', wilayas.find(w => w.id === value).name);
+        }}
         error={errors.to_wilaya_id}
         disabled={data.is_stopdesk === null}
       />
@@ -71,7 +74,10 @@ export const LivraisonSection = () => {
         placeholder={''}
         values={communes}
         initialValue={data.to_commune_id}
-        handleOnValueChange={(value) => setData('to_commune_id', value)}
+        handleOnValueChange={(value) => {
+          setData('to_commune_id', value)
+          setData('to_commune_name', communes.find(c => c.id === value).name);
+        }}
         error={errors.to_commune_id}
         disabled={data.to_wilaya_name === ''}
       />
@@ -80,9 +86,12 @@ export const LivraisonSection = () => {
           label={'Select Center'}
           placeholder={''}
           values={centers}
-          initialValue={data.to_center_center_id}
-          handleOnValueChange={(value) => setData('to_center_center_id', value)}
-          error={errors.to_center_center_id}
+          initialValue={data.to_center_id}
+          handleOnValueChange={(value) => {
+            setData('to_center_id', value);
+            setData('to_center_name', centers.find(c => c.id === value).name);
+          }}
+          error={errors.to_center_id}
           disabled={data.to_commune_name === ''}
         />
       ) : (

@@ -16,7 +16,7 @@ export const ExpediteurSection = () => {
         initialValue={data.from_wilaya_id} // Set initial value from localStorage
         error={null}
         handleOnValueChange={(wilayaId) => {
-          setData('to_wilaya_name', wilayas.find(w => w.id === wilayaId).name);
+          setData('from_wilaya_name', wilayas.find(w => w.id === wilayaId).name);
           setData('from_wilaya_id', wilayaId);
           localStorage.setItem('from_wilaya_id', wilayaId);
         }}

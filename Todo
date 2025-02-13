@@ -1,0 +1,37 @@
+- create page @done
+- auth pages @done
+  - login @done
+  - register @done
+
+- integrate nextAuth @done
+  - login @done
+  - register @done
+  - add middleware @done
+  - sessions @done
+
+- location apis @done
+  - get wilayas @done
+  - get communes of the wilaya @done
+  - get centers of the commune @done
+
+- create order @done
+  - save it in the database @done
+  - push it to the api @done
+  - update it in the database @done
+
+- list my orders
+  - paginate
+  - filter
+
+- edit an order
+  - update the order in the database
+  - push the update to the guepex
+
+- delete a parcel
+  - delete in the database
+  - delete in the guepex
+
+- webhooks
+- 
+- add a queue that will respect the guepex rate limit of 5req/s
+- 

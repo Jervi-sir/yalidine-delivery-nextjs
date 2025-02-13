@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres.fiajqlvacdyoudvadmua:raaahaaan175@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String?
+  email         String?  @unique
+  password      String?
+  password_text String?
+  created_at    DateTime @default(now()) @map(name: "created_at")
+  updated_at    DateTime @updatedAt @map(name: "updated_at")
+  pracels       Parcel[]
+
+  @@map(name: "users")
+}
+
+model Parcel {
+  id                 Int     @id @default(autoincrement())
+  user_id            Int? // Foreign key to the User model
+  order_id           String?
+  from_wilaya_name   String
+  firstname          String
+  familyname         String
+  contact_phone      String
+  address            String
+  to_commune_name    String
+  to_wilaya_name     String
+  product_list       String
+  price              Int
+  do_insurance       Boolean
+  declared_value     Int
+  height             Int? // Made nullable
+  width              Int? // Made nullable
+  length             Int? // Made nullable
+  weight             Float? // Made nullable, using Float for decimal support
+  freeshipping       Boolean
+  is_stopdesk        Boolean
+  stopdesk_id        Int? // Made nullable
+  has_exchange       Boolean
+  product_to_collect String? // Made nullable
+
+  user User? @relation(fields: [user_id], references: [id]) // Relation to User model
+
+  import_id Int?
+  label     String?
+  labels    String?
+  message   String?
+  success   Boolean?
+  tracking  String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("parcels") // Optional:  Map the model to a specific table name
+}

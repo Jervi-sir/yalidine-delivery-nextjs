@@ -1,16 +1,21 @@
 'use client'
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { getSession } from 'next-auth/react';
 
 const CreateOrderContext = createContext(null);
 
 const initialInput: FormData = {
-  recipient: '', firstName: '', familyName: '', contactPhone: '',
-  from_wilaya_id: undefined, to_wilaya_id: undefined, to_commune_id: undefined, to_center_center_id: undefined, address: '',
+  recipient: '', firstName: 'fasfs', familyName: 'sdfsg', contactPhone: '0558054300',
+  //locations
+  from_wilaya_id: undefined, from_wilaya_name: undefined, 
+  to_wilaya_id: undefined, to_wilaya_name: undefined,
+  to_commune_id: undefined, to_commune_name: undefined, 
+  to_center_id: undefined, to_center_name: undefined, address: 'dgdsghddffgd',
   order_date: undefined, is_stopdesk: undefined, do_insurance: false, declared_value: 0,
-  freeshipping: false, has_exchange: false, product_id: '', quantity: '', amount: '', price: undefined, product_to_collect: undefined,
+  freeshipping: false, has_exchange: false, product_id: '', quantity: '', amount: '', price: 2343, product_to_collect: undefined,
   more_then_5kg: false, order_length: undefined, order_width: undefined, order_height: undefined, order_weight: undefined,
-  product_list: undefined
+  product_list: 'sdfsfwer'
 }
 
 export function CreateOrderProvider({ children, products = [] }) {
@@ -47,7 +52,10 @@ export function CreateOrderProvider({ children, products = [] }) {
     }));
   };
   const reset = () => {
+    const old_from_wilaya_id = data.from_wilaya_id;
     setDataJson(initialInput);
+    setData('from_wilaya_id', old_from_wilaya_id);
+    setData('from_wilaya_name', wilayas.find(w => w.id === old_from_wilaya_id).name);
     setErrorsJson({}); // Also reset errors on reset
   };
 
@@ -60,6 +68,7 @@ export function CreateOrderProvider({ children, products = [] }) {
       const savedFromWilaya = localStorage.getItem('from_wilaya_id');
       if (savedFromWilaya) {
         setData('from_wilaya_id', parseInt(savedFromWilaya));
+        setData('from_wilaya_name', response.data.find(w => w.id === parseInt(savedFromWilaya)).name);
       }
     });
   }, []);
@@ -89,7 +98,7 @@ export function CreateOrderProvider({ children, products = [] }) {
     if (!data.to_wilaya_id) return setError('to_wilaya_id', 'missing Wilaya');
     if (!data.to_commune_id) return setError('to_commune_id', 'missing Commune');
     // the delivery is stopdesk the center should be provided
-    if ((data.is_stopdesk === true) && !data.to_center_center_id) return setError('to_center_center_id', 'missing Center');
+    if ((data.is_stopdesk === true) && !data.to_center_id) return setError('to_center_id', 'missing Center');
     // the delivery is commune the address should be provided
     if ((data.is_stopdesk !== true) && !data.address) return setError('address', 'missing Address');
     // coli name is provided
@@ -108,11 +117,13 @@ export function CreateOrderProvider({ children, products = [] }) {
       if (variableIsNotValid(data.order_weight))  return setError('order_weight', 'missing weight');
         if (data.order_weight < 1)               return setError('order_weight', 'missing weight');
     }
+    const session = await getSession();
 
     try {
       setProcessing(true)
-      const response = await axios.post('/api/parcel/submit', data);
-      reset();
+      console.log('session: ', session);
+      const response = await axios.post('/api/parcel/submit', {user_id: session.user.id, user_email: session.user.email, ...data });
+      // reset();
 
       console.log('response: ', response.data);
     } catch (error) {
@@ -153,9 +164,13 @@ interface FormData {
   familyName: string;
   contactPhone: string;
   from_wilaya_id: number | null;
+  from_wilaya_name: string | null;
   to_wilaya_id: number | null;
+  to_wilaya_name: string | null;
   to_commune_id: number | null;
-  to_center_center_id: number | null;
+  to_commune_name: string | null;
+  to_center_id: number | null;
+  to_center_name: string | null;
   address: string;
   order_date: Date | null;
   is_stopdesk: boolean | null;

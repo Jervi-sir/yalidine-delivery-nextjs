@@ -41,7 +41,7 @@ const OrderCreateContent = () => {
           <WeightSection />
           <Separator className='my-4' />
 
-          <Button className="w-full" onClick={handleSubmit} disabled={processing}>
+          <Button className="w-full" onClick={handleSubmit} disabled={false}>
             {processing ? 'Creating...' : 'Submit Parcel'}
           </Button>
         </div>
