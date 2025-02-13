@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { AuthLayout } from '../auth-layout';
-import { Checkbox } from '@/components/ui/checkbox';
 import InputError from '@/components/ui/input-error';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
@@ -31,7 +30,7 @@ export default function Form() {
         router.refresh();
       }
     } catch (error) {
-
+      setError(error)
     } finally {
       setLoading(false)
     }

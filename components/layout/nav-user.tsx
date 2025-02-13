@@ -1,12 +1,8 @@
 "use client"
 
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react"
 
 import {
@@ -17,10 +13,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -33,7 +26,7 @@ import { signOut, useSession } from "next-auth/react"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
 
   if(!session)
     return null;

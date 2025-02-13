@@ -1,4 +1,5 @@
 import { Checkbox } from '@/components/ui/checkbox';
+import InputError from '@/components/ui/input-error';
 import React from 'react'; // We don't need useState anymore
 
 export const CheckboxComponent = ({
@@ -26,6 +27,7 @@ export const CheckboxComponent = ({
             >
                 {label}
             </label>
+            <InputError message={error} />
         </div>
     );
 };

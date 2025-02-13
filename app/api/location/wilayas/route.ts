@@ -1,6 +1,6 @@
 import { wilayas } from "@/database/wilayas";
 
-export async function GET(request: Request) {
+export async function GET() {
   return Response.json([...wilayas])
 }
 

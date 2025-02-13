@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { hash } from 'bcrypt';
 import { createClient } from '@/database/postgresClient';
 
-export async function POST(request: Request) {
+export async function POST(request) {
   try {
     const { name, email, password, repeatPassword } = await request.json();
     if(password !== repeatPassword) 
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     console.log('User created successfully:', data);
     return NextResponse.json({ message: 'success', data }, { status: 201 }); // Return a success response with status 201 (Created)
 
-  } catch (e: any) {
+  } catch (e) {
     console.error('Error during user creation:', e);
     return NextResponse.json({ message: 'error', error: e.message }, { status: 500 }); // Return an error response
   }

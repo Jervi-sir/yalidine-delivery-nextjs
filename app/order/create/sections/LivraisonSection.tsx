@@ -17,7 +17,7 @@ export const LivraisonSection = () => {
 
   // get communes
   useEffect(() => {
-    setData('to_commune_id', '');
+    setData('to_commune_id', undefined);
     if (data.to_wilaya_id === '') return undefined;
     setCommunes([])
     axios.get('/api/location/communes', {
@@ -29,7 +29,7 @@ export const LivraisonSection = () => {
 
   // get communes
   useEffect(() => {
-    setData('to_center_center_id', '');
+    setData('to_center_center_id', undefined);
     if (data.to_commune_id === '') return undefined;
     setCenters([])
     axios.get('/api/location/centers', {

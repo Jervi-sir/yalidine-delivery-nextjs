@@ -4,7 +4,6 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { ThemeProvider } from '@/provider/theme-provider';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { AuthLayout } from './auth/auth-layout';
 import { AppHeader } from '@/components/layout/app-header';
 import { SessionProvider } from 'next-auth/react';
 

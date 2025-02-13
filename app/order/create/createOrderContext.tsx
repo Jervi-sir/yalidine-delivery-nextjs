@@ -18,15 +18,28 @@ export function CreateOrderProvider({ children, products = [] }) {
   const [errors, setErrorsJson] = useState<{ [key: string]: string }>({}); // Define the type of errors
   const [data, setDataJson] = useState<FormData>(initialInput);
 
-  const setData = (name: keyof FormData, value: FormData[keyof FormData]) => {
-    setDataJson((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const setData = (name: keyof FormData, value: string | number | boolean | null | undefined) => {
+    setDataJson((prevData) => {
+      let parsedValue: FormData[keyof FormData] = value as FormData[keyof FormData]; // Default to the provided value
+      // Handle empty string cases based on the field's expected type
+      if (value === '') {
+        if (typeof initialInput[name] === 'number') {
+          parsedValue = undefined as FormData[keyof FormData]; // Or null if appropriate
+        } else if (typeof initialInput[name] === 'boolean') {
+          parsedValue = false as FormData[keyof FormData];
+        } else {
+          parsedValue = '' as FormData[keyof FormData]; // Keep it as an empty string
+        }
+      }
+      return {
+        ...prevData,
+        [name]: parsedValue,
+      };
+    });
   };
-  const setErrors = (errors: { [key: string]: string }) => {
-    setErrorsJson(errors);
-  };
+  // const setErrors = (errors: { [key: string]: string }) => {
+  //   setErrorsJson(errors);
+  // };
   const setError = (field: keyof FormData, message: string) => {
     setErrorsJson((prevErrors) => ({
       ...prevErrors,
@@ -39,7 +52,6 @@ export function CreateOrderProvider({ children, products = [] }) {
   };
 
   const [wilayas, setWilayas] = useState([]);
-  const [date, setDate] = useState(null);
 
   // get wilayas and set sender's wilaya
   useEffect(() => {
@@ -98,12 +110,15 @@ export function CreateOrderProvider({ children, products = [] }) {
     }
 
     try {
+      setProcessing(true)
       const response = await axios.post('/api/parcel/submit', data);
-      // reset();
+      reset();
 
       console.log('response: ', response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setProcessing(false)
     }
   };
 

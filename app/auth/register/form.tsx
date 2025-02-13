@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { AuthLayout } from "../auth-layout";
 import InputError from "@/components/ui/input-error";
-import { FormEvent, useState } from "react";
+import {  useState } from "react";
 import React from 'react';
 import axios from "axios";
 import { signIn } from "next-auth/react";
@@ -23,7 +23,7 @@ export default function Form() {
     e.preventDefault();
     try {
       setLoading(true)
-      const response = await axios.post('/api/auth/register', {
+      await axios.post('/api/auth/register', {
         name: name,
         email: email,
         password: password,

@@ -4,7 +4,7 @@ import { useCreateOrder } from '../createOrderContext';
 
 export const ExpediteurSection = () => {
   const {
-    wilayas, errors, data, setData
+    wilayas, data, setData
   } = useCreateOrder()
   return (
     <div className='space-y-2'>

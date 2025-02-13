@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteLayout } from "./site-layout";
-import { getServerSession } from "next-auth";
-import Logout from "./auth/logout";
+// import { getServerSession } from "next-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,17 +24,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
+  // const session = await getServerSession();
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {
-          session
-          && null
-        }
-        <SiteLayout children={children} />
+        <SiteLayout>
+          {children}
+        </SiteLayout>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 'use client'
 import * as React from "react"
-import { BadgeCheck, CreditCard, GalleryVerticalEnd, icons, Sparkles } from "lucide-react"
+import { BadgeCheck, CreditCard, GalleryVerticalEnd, Sparkles } from "lucide-react"
 
 import {
   Sidebar,

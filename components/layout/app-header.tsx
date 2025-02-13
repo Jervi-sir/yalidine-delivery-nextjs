@@ -9,7 +9,6 @@ import {
 import { SidebarTrigger } from "../ui/sidebar"
 import { Separator } from "../ui/separator"
 import { ThemeToggle } from "../theme-toggle"
-import Logout from "@/app/auth/logout"
 export function AppHeader({ title1 = 'Building Your Application', title2 = 'Data Fetching' }) {
   return (
     <header className="flex shrink-0 items-center justify-between px-4">

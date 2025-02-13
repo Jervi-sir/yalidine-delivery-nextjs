@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         }
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error submitting order to Guepex:", error);
     return new NextResponse(
       JSON.stringify({ error: "Failed to submit order", details: error.message }),

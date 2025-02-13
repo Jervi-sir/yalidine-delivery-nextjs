@@ -18,7 +18,7 @@ const handler = NextAuth({
         email: {},
         password: {},
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
           // Initialize Supabase client only if it's not already initialized
           if (!supabase) {
@@ -56,9 +56,8 @@ const handler = NextAuth({
               email: user.email,
             };
           }
-          console.log('reutnr null: ', );
           return null; // Incorrect password
-        } catch (error: any) {
+        } catch (error) {
           console.error('Error during authorization:', error);
           return null; // Or throw an error
         }

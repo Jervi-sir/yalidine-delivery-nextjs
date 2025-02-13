@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+// import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Popover,  PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { format } from "date-fns";
 import { Separator } from '@/components/ui/separator';
 import InputError from '@/components/ui/input-error';
 
 export const DateInputComponent = ({
-  error, label, value, handleOnSelect,
+  error, label, value, 
 
 }) => {
   return (
@@ -22,14 +22,14 @@ export const DateInputComponent = ({
             {value ? format(value, "PPP") : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start">
+        {/* <PopoverContent align="start">
           <Calendar
             mode="single"
             selected={value}
             onSelect={(e) => handleOnSelect(format(e, 'yyyy-MM-dd'))}
             initialFocus
           />
-        </PopoverContent>
+        </PopoverContent> */}
       </Popover>
       <InputError message={error} className="mt-2" />
     </div>
