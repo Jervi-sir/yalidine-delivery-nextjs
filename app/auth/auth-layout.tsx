@@ -49,7 +49,7 @@ export const AuthLayout = ({ children, isLogin = false }) => {
                   fill="currentColor"
                 />
               </svg>
-              Continue with Google
+              Continue with Google (Coming Soon)
             </Button>
           </div>
         </div>

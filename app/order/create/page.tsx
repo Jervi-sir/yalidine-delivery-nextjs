@@ -1,3 +1,4 @@
+'use client'
 import { Button } from "@/components/ui/button";
 import { Separator } from '@/components/ui/separator';
 import { ExpediteurSection } from './sections/ExpediteurSection';
@@ -5,14 +6,20 @@ import { DestinataireSection } from './sections/DestinataireSection';
 import { LivraisonSection } from './sections/LivraisonSection';
 import { ColiSection } from './sections/ColiSection';
 import { WeightSection } from './sections/WeightSection';
+import { CreateOrderProvider, useCreateOrder } from "./createOrderContext";
 
 export default function Page() {
   return (
-    <OrderCreateContent />
+    <CreateOrderProvider>
+      <OrderCreateContent />
+    </CreateOrderProvider>
   );
 }
 
 const OrderCreateContent = () => {
+  const {
+    handleSubmit, processing
+  } = useCreateOrder();
   return (
     <>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -34,11 +41,11 @@ const OrderCreateContent = () => {
           <WeightSection />
           <Separator className='my-4' />
 
-          <Button className="w-full" >
-            {'Submit Parcel'}
+          <Button className="w-full" onClick={handleSubmit} disabled={processing}>
+            {processing ? 'Creating...' : 'Submit Parcel'}
           </Button>
         </div>
       </div>
-    </ >
+    </>
   );
 }

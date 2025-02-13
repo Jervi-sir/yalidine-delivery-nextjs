@@ -1,0 +1,221 @@
+{
+  "schemas": [
+    {
+      "name": "public",
+      "tables": [
+        {
+          "name": "users",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "email", "type": "TEXT", "unique": true, "notNull": true},
+            {"name": "email_verified_at", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "password", "type": "TEXT", "notNull": true},
+            {"name": "remember_token", "type": "TEXT"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "sessions",
+          "columns": [
+            {"name": "id", "type": "TEXT", "primaryKey": true},
+            {"name": "user_id", "type": "BIGINT"},  
+            {"name": "ip_address", "type": "VARCHAR(45)"},
+            {"name": "user_agent", "type": "TEXT"},
+            {"name": "payload", "type": "TEXT"},
+            {"name": "last_activity", "type": "INTEGER"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+
+          ],
+        "indexes": [
+            {"columns": ["user_id"]},
+            {"columns": ["last_activity"]}
+        ]
+        },
+        {
+          "name": "personal_access_tokens",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "tokenable_type", "type": "TEXT", "notNull": true}, 
+            {"name": "tokenable_id", "type": "BIGINT", "notNull": true},   
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "token", "type": "VARCHAR(64)", "unique": true, "notNull": true},
+            {"name": "abilities", "type": "TEXT"},
+            {"name": "last_used_at", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "expires_at", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "wilayas",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "zone", "type": "INTEGER", "notNull": true},
+            {"name": "is_deliverable", "type": "BOOLEAN", "default": false},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "communes",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "wilaya_id", "type": "BIGINT", "notNull": true}, 
+            {"name": "wilaya_name", "type": "TEXT", "notNull": true},
+            {"name": "has_stop_desk", "type": "BOOLEAN", "default": false},
+            {"name": "is_deliverable", "type": "BOOLEAN", "default": false},
+            {"name": "delivery_time_parcel", "type": "INTEGER"},
+            {"name": "delivery_time_payment", "type": "INTEGER"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "centers",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "center_id", "type": "TEXT", "notNull": true},
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "address", "type": "TEXT", "notNull": true},
+            {"name": "gps", "type": "TEXT", "notNull": true},
+            {"name": "commune_id", "type": "BIGINT", "notNull": true},  
+            {"name": "commune_name", "type": "TEXT", "notNull": true},
+            {"name": "wilaya_id", "type": "BIGINT", "notNull": true}, 
+            {"name": "wilaya_name", "type": "TEXT", "notNull": true},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "categories",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "products",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "user_id", "type": "BIGINT", "notNull": true}, 
+            {"name": "category_id", "type": "BIGINT"},          
+            {"name": "name", "type": "TEXT", "notNull": true},
+            {"name": "description", "type": "TEXT"},
+            {"name": "price", "type": "DECIMAL(10, 2)", "notNull": true},
+            {"name": "weight", "type": "DECIMAL(10, 2)"},
+            {"name": "images", "type": "TEXT"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "orders",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "user_id", "type": "BIGINT", "notNull": true},
+            {"name": "product_id", "type": "BIGINT"},
+            {"name": "delivery_order_id", "type": "TEXT", "unique": true},
+            {"name": "from_wilaya_id", "type": "INTEGER"},
+            {"name": "from_wilaya_name", "type": "TEXT", "notNull": true},
+            {"name": "first_name", "type": "TEXT", "notNull": true},
+            {"name": "family_name", "type": "TEXT", "notNull": true},
+            {"name": "contact_phone", "type": "TEXT", "notNull": true},
+            {"name": "product_list", "type": "TEXT"},
+            {"name": "price", "type": "DECIMAL(10, 2)", "notNull": true},
+            {"name": "do_insurance", "type": "BOOLEAN", "default": false},
+            {"name": "declared_value", "type": "DECIMAL(10, 2)"},
+            {"name": "height", "type": "INTEGER"},
+            {"name": "width", "type": "INTEGER"},
+            {"name": "length", "type": "INTEGER"},
+            {"name": "weight", "type": "DECIMAL(10, 2)"},
+            {"name": "address", "type": "TEXT"},
+            {"name": "to_commune_name", "type": "TEXT", "notNull": true},
+            {"name": "to_wilaya_name", "type": "TEXT", "notNull": true},
+            {"name": "wilaya_id", "type": "BIGINT"},
+            {"name": "commune_id", "type": "BIGINT"},
+            {"name": "stopdesk_id", "type": "TEXT"},
+            {"name": "freeshipping", "type": "BOOLEAN", "default": false},
+            {"name": "is_stopdesk", "type": "BOOLEAN", "default": false},
+            {"name": "has_exchange", "type": "BOOLEAN", "default": false},
+            {"name": "product_to_collect", "type": "TEXT"},
+            {"name": "quantity", "type": "INTEGER"},
+            {"name": "amount", "type": "DECIMAL(10, 2)"},
+            {"name": "order_date", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "status", "type": "TEXT", "default": "pending"},
+            {"name": "tracking_number", "type": "TEXT"},
+            {"name": "tracking", "type": "TEXT"},
+            {"name": "import_id", "type": "BIGINT"},
+            {"name": "pracel_date_creation", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "pracel_date_expedition", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "pracel_date_last_status", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "pracel_last_status", "type": "TIMESTAMP WITH TIME ZONE"},
+            {"name": "taxe_percentage", "type": "DECIMAL(5, 2)"},
+            {"name": "taxe_from", "type": "DECIMAL(10, 2)"},
+            {"name": "taxe_retour", "type": "DECIMAL(10, 2)"},
+            {"name": "parcel_type", "type": "TEXT"},
+            {"name": "parcel_sub_type", "type": "TEXT"},
+            {"name": "has_receipt", "type": "BOOLEAN"},
+            {"name": "has_recouvrement", "type": "BOOLEAN", "default": false},
+            {"name": "payment_status", "type": "TEXT", "default": "not-ready"},
+            {"name": "payment_id", "type": "TEXT"},
+            {"name": "label", "type": "TEXT"},
+            {"name": "pin", "type": "TEXT"},
+            {"name": "qr_text", "type": "TEXT"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "wallet_transactions",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "user_id", "type": "BIGINT", "notNull": true},
+            {"name": "type", "type": "TEXT", "notNull": true},
+            {"name": "amount", "type": "DECIMAL(10, 2)", "notNull": true},
+            {"name": "status", "type": "TEXT", "notNull": true},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "notifications",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "user_id", "type": "BIGINT", "notNull": true},
+            {"name": "type", "type": "TEXT", "notNull": true},
+            {"name": "message", "type": "TEXT", "notNull": true},
+            {"name": "read", "type": "BOOLEAN", "default": false},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        },
+        {
+          "name": "user_settings",
+          "columns": [
+            {"name": "id", "type": "BIGSERIAL", "primaryKey": true},
+            {"name": "user_id", "type": "BIGINT", "notNull": true},
+            {"name": "notifications_enabled", "type": "BOOLEAN", "default": true},
+            {"name": "language", "type": "TEXT", "default": "en"},
+            {"name": "bio", "type": "TEXT"},
+            {"name": "created_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"},
+            {"name": "updated_at", "type": "TIMESTAMP WITH TIME ZONE", "default": "CURRENT_TIMESTAMP"}
+          ]
+        }
+      ],
+      "grants": {
+        "usage": ["public"],
+        "select": ["public"],
+        "insert": ["public"],
+        "update": ["public"],
+        "delete": ["public"]
+      }
+    }
+  ]
+}

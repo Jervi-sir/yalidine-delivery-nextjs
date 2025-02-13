@@ -1,6 +1,6 @@
 'use client'
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
+import { BadgeCheck, CreditCard, GalleryVerticalEnd, icons, Sparkles } from "lucide-react"
 
 import {
   Sidebar,
@@ -15,6 +15,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation";
+import { NavUser } from "./nav-user";
 
 // This is sample data.
 const data = {
@@ -22,6 +23,7 @@ const data = {
     {
       title: "Orders",
       url: "#",
+      icon: <Sparkles />,
       items: [
         {
           title: "Create",
@@ -36,6 +38,7 @@ const data = {
     {
       title: "Products",
       url: "#",
+      icon: <BadgeCheck />,
       items: [
         {
           title: "Create",
@@ -55,6 +58,7 @@ const data = {
     {
       title: "Wallet",
       url: "#",
+      icon: <CreditCard />,
       items: [
         {
           title: "Request Widthrawl",
@@ -83,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <GalleryVerticalEnd className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Documentation</span>
+                  <span className="font-semibold">Delivery</span>
                   <span className="">v1.0.0</span>
                 </div>
               </a>
@@ -98,6 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
                   <a href={item.url} className="font-medium">
+                    {/* {item.icon} */}
                     {item.title}
                   </a>
                 </SidebarMenuButton>
@@ -117,6 +122,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <div className="p-2">
+        <NavUser />
+      </div>
     </Sidebar>
   )
 }
