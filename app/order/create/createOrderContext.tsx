@@ -189,4 +189,14 @@ interface FormData {
   order_width: number | null;
   order_height: number | null;
   order_weight: number | null;
+
+  tracking?: string | null;
+  import_id?: number | null;
+  label?: string | null;
+  labels?: string | null;
+  message?: string | null;
+  success?: boolean | null;
+  importId?: number | null;
+  status?: string | null;
+  paymentId?: string | null;
 }
