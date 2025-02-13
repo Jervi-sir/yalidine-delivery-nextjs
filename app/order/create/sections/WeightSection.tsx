@@ -22,15 +22,14 @@ export const WeightSection = () => {
       </div>
       {
         data.more_then_5kg
-        &&
-        <div className='space-y-4 mt-4'>
+        && <div className='space-y-4 mt-4'>
           <InputComponent
             label={'Longueur en CM'}
             type='number'
             placeholder={''}
             value={data.order_length}
             handleOnChange={(e) => setData('order_length', e.target.value)}
-            error={null}
+            error={errors.order_length}
           />
 
           <InputComponent
@@ -39,7 +38,7 @@ export const WeightSection = () => {
             placeholder={''}
             value={data.order_width}
             handleOnChange={(e) => setData('order_width', e.target.value)}
-            error={null}
+            error={errors.order_width}
           />
           <InputComponent
             label={'Hauteur en CM'}
@@ -47,7 +46,7 @@ export const WeightSection = () => {
             placeholder={''}
             value={data.order_height}
             handleOnChange={(e) => setData('order_height', e.target.value)}
-            error={null}
+            error={errors.order_height}
           />
           <InputComponent
             label={'Poids en KG'}
@@ -55,7 +54,7 @@ export const WeightSection = () => {
             placeholder={''}
             value={data.order_weight}
             handleOnChange={(e) => setData('order_weight', e.target.value)}
-            error={null}
+            error={errors.order_weight}
           />
         </div>
       }

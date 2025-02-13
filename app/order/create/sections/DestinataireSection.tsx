@@ -14,21 +14,21 @@ export const DestinataireSection = () => {
         placeholder={''}
         value={data.familyName}
         handleOnChange={(e) => setData('familyName', e.target.value)}
-        error={null}
+        error={errors.familyName}
       />
       <InputComponent
         label={'Prénom'}
         placeholder={''}
         value={data.firstName}
         handleOnChange={(e) => setData('firstName', e.target.value)}
-        error={null}
+        error={errors.firstName}
       />
       <InputComponent
         label={'Téléphone'}
         placeholder={''}
         value={data.contactPhone}
         handleOnChange={(e) => setData('contactPhone', e.target.value)}
-        error={null}
+        error={errors.contactPhone}
       />
     </div>
   );

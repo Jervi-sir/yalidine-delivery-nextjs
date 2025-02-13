@@ -36,7 +36,7 @@ const OrderCreateContent = () => {
           <Separator className='my-4' />
           {/*--- Coli ---*/}
           <ColiSection />
-          <LivraisonSection />
+          <Separator className='my-4' />
           {/*--- Dimension & poids ---*/}
           <WeightSection />
           <Separator className='my-4' />
