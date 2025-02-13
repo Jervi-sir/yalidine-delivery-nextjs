@@ -21,8 +21,8 @@ model User {
 }
 
 model Parcel {
-  id                 Int      @id @default(autoincrement())
-  user_id            Int?     // Foreign key to the User model
+  id                 Int     @id @default(autoincrement())
+  user_id            Int? // Foreign key to the User model
   order_id           String?
   from_wilaya_name   String
   firstname          String
@@ -35,26 +35,27 @@ model Parcel {
   price              Int
   do_insurance       Boolean
   declared_value     Int
-  height             Int?     // Made nullable
-  width              Int?     // Made nullable
-  length             Int?     // Made nullable
-  weight             Float?   // Made nullable, using Float for decimal support
+  height             Int? // Made nullable
+  width              Int? // Made nullable
+  length             Int? // Made nullable
+  weight             Float? // Made nullable, using Float for decimal support
   freeshipping       Boolean
   is_stopdesk        Boolean
-  stopdesk_id        Int?     // Made nullable
+  stopdesk_id        Int? // Made nullable
   has_exchange       Boolean
   product_to_collect String? // Made nullable
 
-  tracking  String?   // Add this line
-  import_id Int?      // Add this line
-  label     String?   // Add this line
-  labels    String?   // Add this line
-  message   String?   // Add this line
-  success   Boolean?  // Add this line
+  tracking  String? // Add this line
+  import_id Int? // Add this line
+  label     String? // Add this line
+  labels    String? // Add this line
+  message   String? // Add this line
+  success   Boolean? // Add this line
 
-  importId  Int?      // Add this line
-  status    String?   // Add this line
-  paymentId String?   // Add this line
+  status      String? // Add this line
+  payment_id  String? // Add this line
+  event_id    String? // Add this line
+  occurred_at DateTime? // Add this line
 
   user User? @relation(fields: [user_id], references: [id]) // Relation to User model
 

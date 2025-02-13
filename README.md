@@ -12,7 +12,7 @@ https://dev.to/isaacdyor/setting-up-nextjs-project-with-prisma-200j
 npx prisma db push --force-reset
 npx prisma studio
 npx prisma migrate dev --name "Add status, message, and paymentId to Parcel model"
-
+npx prisma generate
 
 ### Tunnel
 https://docs.zrok.io/docs/getting-started/

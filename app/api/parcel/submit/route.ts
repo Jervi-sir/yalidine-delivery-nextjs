@@ -1,7 +1,6 @@
 // app/api/parcel/submit/route.ts
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import { PrismaClient } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import prisma from '@/prisma/prisma';
