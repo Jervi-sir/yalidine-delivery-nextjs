@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { AppHeader } from '@/components/layout/app-header';
 import { SessionProvider } from 'next-auth/react';
+import { Toaster } from "@/components/ui/toaster"
 
 export const SiteLayout = ({ children }) => {
   const pathname = usePathname();
@@ -33,10 +34,13 @@ export const SiteLayout = ({ children }) => {
             <AppSidebar />
             <SidebarInset>
               <AppHeader />
-              {children}
+              <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
+                {children}
+              </div>
             </SidebarInset>
           </SidebarProvider>
         )}
+        <Toaster />
       </ThemeProvider>
     </SessionProvider>
   );

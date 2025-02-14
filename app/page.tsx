@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import {Button, ButtonGroup} from "@heroui/button";
 
 export default function Home() {
   return (

@@ -17,7 +17,7 @@ export const LivraisonSection = () => {
 
   // get communes
   useEffect(() => {
-    setData('to_commune_id', undefined);
+    setData('to_commune_id', '');
     if (data.to_wilaya_id === '') return undefined;
     setCommunes([])
     axios.get('/api/location/communes', {
@@ -29,8 +29,8 @@ export const LivraisonSection = () => {
 
   // get communes
   useEffect(() => {
-    setData('to_center_id', undefined);
     if (data.to_commune_id === '') return undefined;
+    setData('to_center_id', '');
     setCenters([])
     axios.get('/api/location/centers', {
       params: { wilaya_id: data.to_wilaya_id, commune_id: data.to_commune_id }

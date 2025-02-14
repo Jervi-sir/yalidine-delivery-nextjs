@@ -10,74 +10,69 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation";
 import { NavUser } from "./nav-user";
+import { NavMain } from "./nav-main";
 
 // This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Orders",
-      url: "#",
-      icon: <Sparkles />,
-      items: [
-        {
-          title: "Create",
-          url: "/order/create",
-        },
-        {
-          title: "List",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Products",
-      url: "#",
-      icon: <BadgeCheck />,
-      items: [
-        {
-          title: "Create",
-          url: "#",
-        },
-        {
-          title: "List",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Suggest",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Wallet",
-      url: "#",
-      icon: <CreditCard />,
-      items: [
-        {
-          title: "Request Widthrawl",
-          url: "#",
-        },
-        {
-          title: "History",
-          url: "#",
-        },
-      ],
-    },
-  ],
-}
+const data = [
+  {
+    title: "Orders",
+    url: "#",
+    icon: Sparkles,
+    isActive: true,
+    items: [
+      {
+        title: "Create",
+        url: "/order/create",
+      },
+      {
+        title: "List",
+        url: "/order/list",
+      },
+    ],
+  },
+  {
+    title: "Products",
+    url: "#",
+    icon: BadgeCheck,
+    items: [
+      {
+        title: "Create",
+        url: "/product/create",
+      },
+      {
+        title: "List",
+        url: "/product/list",
+        isActive: true,
+      },
+      {
+        title: "Suggest",
+        url: "/product/suggest",
+      },
+    ],
+  },
+  {
+    title: "Wallet",
+    url: "#",
+    icon: CreditCard,
+    items: [
+      {
+        title: "Request Withdraw",
+        url: "/wallet/withdraw",
+      },
+      {
+        title: "History",
+        url: "#",
+      },
+    ],
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
-
   return (
-    <Sidebar variant="floating" {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -98,27 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {data.navMain.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url} className="font-medium">
-                    {/* {item.icon} */}
-                    {item.title}
-                  </a>
-                </SidebarMenuButton>
-                {item.items?.length ? (
-                  <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                    {item.items.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
-                          <a href={subItem.url}>{subItem.title}</a>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                ) : null}
-              </SidebarMenuItem>
-            ))}
+            <NavMain items={data} />
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

@@ -22,29 +22,27 @@ const OrderCreateContent = () => {
   } = useCreateOrder();
   return (
     <>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className='p-4 border rounded-lg shadow-md '>
-          <h2 className="text-xl font-bold mb-4">Create Parcel</h2>
-          {/*--- Expéditeur ---*/}
-          <ExpediteurSection />
-          <Separator className='my-4' />
-          {/*--- Destinataire ---*/}
-          <DestinataireSection />
-          <Separator className='my-4' />
-          {/*--- Livraison ---*/}
-          <LivraisonSection />
-          <Separator className='my-4' />
-          {/*--- Coli ---*/}
-          <ColiSection />
-          <Separator className='my-4' />
-          {/*--- Dimension & poids ---*/}
-          <WeightSection />
-          <Separator className='my-4' />
+      <div className='p-4 border rounded-lg shadow-md '>
+        <h2 className="text-xl font-bold mb-4">Create Parcel</h2>
+        {/*--- Expéditeur ---*/}
+        <ExpediteurSection />
+        <Separator className='my-4' />
+        {/*--- Destinataire ---*/}
+        <DestinataireSection />
+        <Separator className='my-4' />
+        {/*--- Livraison ---*/}
+        <LivraisonSection />
+        <Separator className='my-4' />
+        {/*--- Coli ---*/}
+        <ColiSection />
+        <Separator className='my-4' />
+        {/*--- Dimension & poids ---*/}
+        <WeightSection />
+        <Separator className='my-4' />
 
-          <Button className="w-full" onClick={handleSubmit} disabled={false}>
-            {processing ? 'Creating...' : 'Submit Parcel'}
-          </Button>
-        </div>
+        <Button className="w-full" onClick={handleSubmit} disabled={false}>
+          {processing ? 'Creating...' : 'Submit Parcel'}
+        </Button>
       </div>
     </>
   );

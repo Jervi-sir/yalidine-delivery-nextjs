@@ -2,15 +2,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
-
+import { wilayas as locallySavedWilaya } from '@/database/wilayas';
 const CreateOrderContext = createContext(null);
 
 const initialInput: FormData = {
   recipient: '', firstName: 'fasfs', familyName: 'sdfsg', contactPhone: '0558054300',
   //locations
-  from_wilaya_id: undefined, from_wilaya_name: undefined, 
+  from_wilaya_id: undefined, from_wilaya_name: undefined,
   to_wilaya_id: undefined, to_wilaya_name: undefined,
-  to_commune_id: undefined, to_commune_name: undefined, 
+  to_commune_id: undefined, to_commune_name: undefined,
   to_center_id: undefined, to_center_name: undefined, address: 'dgdsghddffgd',
   order_date: undefined, is_stopdesk: undefined, do_insurance: false, declared_value: 0,
   freeshipping: false, has_exchange: false, product_id: '', quantity: '', amount: '', price: 2343, product_to_collect: undefined,
@@ -63,20 +63,21 @@ export function CreateOrderProvider({ children, products = [] }) {
 
   // get wilayas and set sender's wilaya
   useEffect(() => {
-    axios.get('/api/location/wilayas').then(response => {
-      setWilayas(response.data);
-      const savedFromWilaya = localStorage.getItem('from_wilaya_id');
-      if (savedFromWilaya) {
-        setData('from_wilaya_id', parseInt(savedFromWilaya));
-        setData('from_wilaya_name', response.data.find(w => w.id === parseInt(savedFromWilaya)).name);
-      }
-    });
+    setWilayas(locallySavedWilaya);
+    const savedFromWilaya = localStorage.getItem('from_wilaya_id');
+    if (savedFromWilaya) {
+      setData('from_wilaya_id', parseInt(savedFromWilaya));
+      setData('from_wilaya_name', locallySavedWilaya.find(w => w.id === parseInt(savedFromWilaya)).name);
+    }
+    // axios.get('/api/location/wilayas').then(response => {
+
+    // });
   }, []);
 
   const variableIsNotValid = (value) => {
     if (value === undefined) return true;
     if (value === '') return true;
-    const trimedValue = value.toString().replace(/\s/g,'');
+    const trimedValue = value.toString().replace(/\s/g, '');
     if (trimedValue.length === 0) return true;
   }
 
@@ -91,7 +92,7 @@ export function CreateOrderProvider({ children, products = [] }) {
     if (variableIsNotValid(data.contactPhone)) return setError('contactPhone', 'missing contactPhone');
     // phone is provided and is phone number
     const phoneRegex = /^\d{10}$/; // Matches 0 followed by 9 digits
-    if (!phoneRegex.test(data.contactPhone.replaceAll(/\s/g,''))) return setError('contactPhone', 'contactPhone is not correctly formatted');
+    if (!phoneRegex.test(data.contactPhone.replaceAll(/\s/g, ''))) return setError('contactPhone', 'contactPhone is not correctly formatted');
     // delivery type is provided
     if (data.is_stopdesk === undefined) return setError('is_stopdesk', 'missing Delivery Type');
     // to wilaya and commune are provided
@@ -108,21 +109,21 @@ export function CreateOrderProvider({ children, products = [] }) {
     if (data.price < 1) return setError('price', 'missing price');
     // if is above 5kg the longeur and largeur, and hauteur and poids should be provided
     if (data.more_then_5kg) {
-      if (variableIsNotValid(data.order_length))  return setError('order_length', 'missing length');
-        if (data.order_length < 1)               return setError('order_length', 'missing length');
-      if (variableIsNotValid(data.order_width))   return setError('order_width', 'missing width');
-        if (data.order_width < 1)                return setError('order_width', 'missing width');
-      if (variableIsNotValid(data.order_height))  return setError('order_height', 'missing height');
-        if (data.order_height < 1)               return setError('order_height', 'missing height');
-      if (variableIsNotValid(data.order_weight))  return setError('order_weight', 'missing weight');
-        if (data.order_weight < 1)               return setError('order_weight', 'missing weight');
+      if (variableIsNotValid(data.order_length)) return setError('order_length', 'missing length');
+      if (data.order_length < 1) return setError('order_length', 'missing length');
+      if (variableIsNotValid(data.order_width)) return setError('order_width', 'missing width');
+      if (data.order_width < 1) return setError('order_width', 'missing width');
+      if (variableIsNotValid(data.order_height)) return setError('order_height', 'missing height');
+      if (data.order_height < 1) return setError('order_height', 'missing height');
+      if (variableIsNotValid(data.order_weight)) return setError('order_weight', 'missing weight');
+      if (data.order_weight < 1) return setError('order_weight', 'missing weight');
     }
     const session = await getSession();
 
     try {
       setProcessing(true)
       console.log('session: ', session);
-      const response = await axios.post('/api/parcel/submit', {user_id: session.user.id, user_email: session.user.email, ...data });
+      const response = await axios.post('/api/parcel/submit', { user_id: session.user.id, user_email: session.user.email, ...data });
       // reset();
 
       console.log('response: ', response.data);
