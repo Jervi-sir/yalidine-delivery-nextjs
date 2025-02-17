@@ -23,13 +23,46 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { signOut, useSession } from "next-auth/react"
+import { useToast } from "@/hooks/use-toast"
+import { Skeleton } from "../ui/skeleton"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const { data: session } = useSession()
+  const { toast } = useToast();
 
-  if(!session)
-    return null;
+  const fetchLogout = async () => {
+    try {
+      signOut();
+      toast({
+        title: "Success",
+        description: "Logged Out Successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error happened.",
+        variant: "destructive",
+      });
+    }
+  }
+
+  if (!session)
+    return (
+      <SidebarMenuButton
+        size="lg"
+        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+      >
+        <Avatar className="h-8 w-8 rounded-lg">
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </Avatar>
+        <div className="grid flex-1 text-left text-sm leading-tight gap-1">
+          <Skeleton className="h-2.5 w-[100px]" />
+          <Skeleton className="h-2 w-[69px]" />
+        </div>
+        <Skeleton className="h-4 w-4" />
+      </SidebarMenuButton>
+    )
   else
     return (
       <SidebarMenu>
@@ -57,7 +90,7 @@ export function NavUser() {
               align="end"
               sideOffset={4}
             >
-              <DropdownMenuItem className="cursor-pointer" onClick={() => signOut()}>
+              <DropdownMenuItem className="cursor-pointer" onClick={fetchLogout}>
                 <LogOut />
                 Log out
               </DropdownMenuItem>

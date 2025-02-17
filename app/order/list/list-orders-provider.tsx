@@ -3,11 +3,12 @@ import { Parcel } from '@prisma/client';
 import { ColumnFiltersState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable, VisibilityState } from '@tanstack/react-table';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { columns } from './columns';
+import { getSession } from 'next-auth/react';
 const ListOrdersContext = createContext(null);
 
 export function ListOrdersProvider({ children, products = [] }) {
   const perPage = 7;
-  const userId = 1
+  const [userId, setUserId] = useState(null);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -22,15 +23,23 @@ export function ListOrdersProvider({ children, products = [] }) {
   const [isStopdeskFilter, setIsStopdeskFilter] = useState<number | undefined>(undefined);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [doInsuranceFilter, setDoInsuranceFilter] = useState<boolean | undefined>(undefined);
-  
+
   const [isLoadingData, setIsLoadingData] = useState(true);
+
+  const getUserId = async () => {
+    const session = await getSession();
+    setUserId((session.user as any).id);
+  }
+  useEffect(() => {
+    getUserId();
+  }, [])
   // Fetch data on initial load and when filters/pagination change
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoadingData(true);
         const params = new URLSearchParams({
-          userId: userId.toString(),
+          userId: userId,
           page: currentPage.toString(),
           perPage: perPage.toString(),
           ...(wilayaFilter && { wilaya: wilayaFilter }),
@@ -46,9 +55,9 @@ export function ListOrdersProvider({ children, products = [] }) {
 
         const response = await fetch(`/api/parcel/list?${params.toString()}`);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`HTTP error! Status: ${response.status}`);
+        // }
 
         const result = await response.json();
 
@@ -64,7 +73,9 @@ export function ListOrdersProvider({ children, products = [] }) {
       }
     };
 
-    fetchData();
+    if(userId) {
+      fetchData();
+    }
   }, [
     perPage, userId, currentPage, wilayaFilter, communeFilter,
     isStopdeskFilter, statusFilter, doInsuranceFilter,
@@ -88,10 +99,10 @@ export function ListOrdersProvider({ children, products = [] }) {
   const value = {
     table, totalPages,
     totalCount, setCurrentPage, currentPage,
-    wilayaFilter, setWilayaFilter, 
-    communeFilter, setCommuneFilter, 
-    isStopdeskFilter, setIsStopdeskFilter, 
-    statusFilter, setStatusFilter, 
+    wilayaFilter, setWilayaFilter,
+    communeFilter, setCommuneFilter,
+    isStopdeskFilter, setIsStopdeskFilter,
+    statusFilter, setStatusFilter,
     doInsuranceFilter, setDoInsuranceFilter,
     isLoadingData
   };

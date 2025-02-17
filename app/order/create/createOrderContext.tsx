@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 import { wilayas as locallySavedWilaya } from '@/database/wilayas';
+import { useToast } from '@/hooks/use-toast';
 const CreateOrderContext = createContext(null);
 
 const initialInput: FormData = {
@@ -22,6 +23,7 @@ export function CreateOrderProvider({ children, products = [] }) {
   const [processing, setProcessing] = useState(false);
   const [errors, setErrorsJson] = useState<{ [key: string]: string }>({}); // Define the type of errors
   const [data, setDataJson] = useState<FormData>(initialInput);
+  const { toast } = useToast();
 
   const setData = (name: keyof FormData, value: string | number | boolean | null | undefined) => {
     setDataJson((prevData) => {
@@ -123,9 +125,12 @@ export function CreateOrderProvider({ children, products = [] }) {
     try {
       setProcessing(true)
       console.log('session: ', session);
-      const response = await axios.post('/api/parcel/submit', { user_id: session.user.id, user_email: session.user.email, ...data });
+      const response = await axios.post('/api/parcel/submit', { user_id: (session.user as any).id, user_email: session.user.email, ...data });
       // reset();
-
+      toast({
+        title: "Success",
+        description: response.data.message,
+      });
       console.log('response: ', response.data);
     } catch (error) {
       console.log(error);

@@ -7,8 +7,12 @@ import { LivraisonSection } from './sections/LivraisonSection';
 import { ColiSection } from './sections/ColiSection';
 import { WeightSection } from './sections/WeightSection';
 import { CreateOrderProvider, useCreateOrder } from "./createOrderContext";
+import { AppHeader } from "@/components/layout/app-header";
+import useHeadbarInsetStore from "@/zustand/headbarInsetStore";
 
 export default function Page() {
+  const setHeaderTitles = useHeadbarInsetStore((state: any) => state.setHeaderTitles);
+  setHeaderTitles(['Parcle', 'Create']);
   return (
     <CreateOrderProvider>
       <OrderCreateContent />

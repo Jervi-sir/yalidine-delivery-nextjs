@@ -109,7 +109,10 @@ export async function POST(req: Request) {
           },
         });
 
-        return NextResponse.json({ ...updatedParcel }, { status: 200 }); // Return the updated parcel
+        return NextResponse.json({ 
+          message: 'parcel successfully submitted to Delivery',
+          ...updatedParcel 
+        }, { status: 200 }); // Return the updated parcel
       } else {
         console.error("Guepex API returned an error:", response.status, response.data);
         return NextResponse.json({ details: response.data, }, { status: 500 }); // Return the updated parcel

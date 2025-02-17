@@ -35,3 +35,6 @@
 - 
 - add a queue that will respect the guepex rate limit of 5req/s
 - 
+- create wallet table
+- list my histories of withdraw
+- request money withdraw

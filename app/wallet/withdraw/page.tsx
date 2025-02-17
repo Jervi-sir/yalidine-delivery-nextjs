@@ -12,6 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast"
+import { getSession } from "next-auth/react";
+import axios from "axios";
+import useHeadbarInsetStore from "@/zustand/headbarInsetStore";
 
 const cryptoOptions = [
   { value: "BTC", label: "Bitcoin (BTC)" },
@@ -21,10 +24,15 @@ const cryptoOptions = [
 ];
 
 export default function Page() {
+  const setHeaderTitles = useHeadbarInsetStore((state: any) => state.setHeaderTitles);
+  setHeaderTitles(['Wallet', 'Withdraw']);
+
   const [cryptoType, setCryptoType] = useState(cryptoOptions[0].value);
   const [walletAddress, setWalletAddress] = useState("");
   const [amount, setAmount] = useState("");
-  const { toast } = useToast()
+  const { toast } = useToast();
+  const [processing, setProcessing] = useState(false);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,18 +45,21 @@ export default function Page() {
       });
       return;
     }
-
+    setProcessing(true); // Disable the button while processing
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast({
-        title: "Success",
-        description: `Withdrawal request submitted for ${amount} ${cryptoType} to ${walletAddress}.`,
+      const session = await getSession();
+      const response = await axios.post('/api/wallet/requestWithdraw', {
+        user_id: (session.user as any).id,
+        crypto_type: cryptoType,
+        wallet_address: walletAddress,
+        amount: amount,
       });
-
-      setWalletAddress("");
-      setAmount("");
+        toast({
+          title: "Success",
+          description: response.data.message,
+        });
+        setWalletAddress("");
+        setAmount("");
     } catch (error) {
       console.error("Withdrawal request failed:", error);
       toast({
@@ -56,7 +67,10 @@ export default function Page() {
         description: "Failed to submit withdrawal request.",
         variant: "destructive",
       });
+    } finally {
+      setProcessing(false); // Re-enable the button
     }
+
   };
 
   return (
@@ -100,11 +114,11 @@ export default function Page() {
               placeholder="Enter amount to withdraw"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
+              min={0}
             />
           </div>
           <Button type="submit" className="w-full" onClick={handleSubmit} disabled={false}>
-            Request Withdrawal
-            {/* {processing ? 'Creating...' : 'Submit Parcel'} */}
+            {processing ? 'Processing...' : 'Request Withdrawal'}
           </Button>
         </div>
       </form>

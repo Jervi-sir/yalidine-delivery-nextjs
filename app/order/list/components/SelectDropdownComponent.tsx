@@ -16,8 +16,8 @@ export const SelectDropdownComponent = ({ placeholder, values, initialValue = un
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {values.map(value => (
-                <SelectItem key={value.id} value={value}>
+              {values.map((value, index) => (
+                <SelectItem key={index} value={value}>
                   {value.name}
                 </SelectItem>
               ))}

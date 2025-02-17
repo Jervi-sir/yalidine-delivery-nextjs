@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Loader2 } from 'lucide-react';
-import LogoutActionComponent from '../logout';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Form() {
   const router = useRouter();
@@ -16,7 +16,8 @@ export default function Form() {
   const [password, setPassword] = useState('password');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const { toast } = useToast();
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -27,11 +28,20 @@ export default function Form() {
         redirect: false,
       });
       if (!response?.error) {
+        toast({
+          title: "Success",
+          description: "Logged In Successfully",
+        });
         router.push('/dashboard');
         router.refresh();
       }
     } catch (error) {
       setError(error)
+      toast({
+        title: "Error",
+        description: "Error happened.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false)
     }

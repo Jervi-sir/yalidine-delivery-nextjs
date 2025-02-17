@@ -1,6 +1,6 @@
 'use client'
 import * as React from "react"
-import { BadgeCheck, CreditCard, GalleryVerticalEnd, Sparkles } from "lucide-react"
+import { BadgeCheck, CreditCard, GalleryVerticalEnd, LayoutDashboard, Sparkles } from "lucide-react"
 
 import {
   Sidebar,
@@ -18,8 +18,13 @@ import { NavMain } from "./nav-main";
 // This is sample data.
 const data = [
   {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
     title: "Orders",
-    url: "#",
     icon: Sparkles,
     isActive: true,
     items: [
@@ -34,8 +39,22 @@ const data = [
     ],
   },
   {
+    title: "Wallet",
+    icon: CreditCard,
+    isActive: true,
+    items: [
+      {
+        title: "Request Withdraw",
+        url: "/wallet/withdraw",
+      },
+      {
+        title: "History",
+        url: "/wallet/history",
+      },
+    ],
+  },
+  {
     title: "Products",
-    url: "#",
     icon: BadgeCheck,
     items: [
       {
@@ -45,26 +64,10 @@ const data = [
       {
         title: "List",
         url: "/product/list",
-        isActive: true,
       },
       {
         title: "Suggest",
         url: "/product/suggest",
-      },
-    ],
-  },
-  {
-    title: "Wallet",
-    url: "#",
-    icon: CreditCard,
-    items: [
-      {
-        title: "Request Withdraw",
-        url: "/wallet/withdraw",
-      },
-      {
-        title: "History",
-        url: "#",
       },
     ],
   },
@@ -77,13 +80,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <GalleryVerticalEnd className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Delivery</span>
-                  <span className="">v1.0.0</span>
+                  <span className="font-semibold">Livrili</span>
+                  <span className="">v0.0.1</span>
                 </div>
               </a>
             </SidebarMenuButton>

@@ -10,6 +10,7 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Form() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function Form() {
   const [password, setPassword] = useState('password');
   const [repeatPassword, setRepeatPassword] = useState('password');
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const fetchRegister = async (e) => {
     e.preventDefault();
@@ -35,11 +37,20 @@ export default function Form() {
         redirect: false,
       });
       if (!response2?.error) {
+        toast({
+          title: "Success",
+          description: "Register In Successfully",
+        });
         router.push('/dashboard');
         router.refresh();
       }
     } catch (error) {
       console.error('error: ', error);
+      toast({
+        title: "Error",
+        description: "Error happened.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false)
     }
