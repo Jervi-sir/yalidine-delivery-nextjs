@@ -27,17 +27,17 @@ model Parcel {
   id                 Int     @id @default(autoincrement())
   user_id            Int? // Foreign key to the User model
   order_id           String?
-  from_wilaya_id     String?
+  from_wilaya_id     Int?
   from_wilaya_name   String
   firstname          String
   familyname         String
   contact_phone      String
   address            String
-  to_commune_id      String?
+  to_commune_id      Int?
   to_commune_name    String
-  to_wilaya_id       String?
+  to_wilaya_id       Int?
   to_wilaya_name     String
-  to_center_id       String?
+  to_center_id       Int?
   to_center_name     String?
   product_list       String
   price              Int

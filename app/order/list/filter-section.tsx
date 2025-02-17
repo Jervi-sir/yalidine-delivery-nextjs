@@ -91,7 +91,7 @@ export const FilterShownColumnComponent = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto">
+        <Button variant="outline" className="h-9.5">
           Columns <ChevronDown />
         </Button>
       </DropdownMenuTrigger>

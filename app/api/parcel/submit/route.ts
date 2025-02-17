@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     let dataToSave = {
       user_id: user_id,
       // order_id: order_id, // should be filled after saving it
-      from_wilaya_id: data.from_wilaya_id.toString(),
+      from_wilaya_id: data.from_wilaya_id,
       from_wilaya_name: data.from_wilaya_name,
       firstname: data.firstName,
       familyname: data.familyName,
@@ -37,11 +37,11 @@ export async function POST(req: Request) {
 
       // address
       address: data.address,
-      to_wilaya_id: data.to_wilaya_id.toString(),
+      to_wilaya_id: data.to_wilaya_id,
       to_wilaya_name: data.to_wilaya_name,
-      to_commune_id: data.to_commune_id.toString(),
+      to_commune_id: data.to_commune_id,
       to_commune_name: data.to_commune_name,
-      to_center_id: data.to_center_id.toString(),
+      to_center_id: data.to_center_id,
       to_center_name: data.to_center_name,
       is_stopdesk: data.is_stopdesk,
       stopdesk_id: data.to_center_id || null, // Handle null values

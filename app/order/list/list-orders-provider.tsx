@@ -104,7 +104,7 @@ export function ListOrdersProvider({ children, products = [] }) {
     setSelectedParcelToView(parcel)
   }
   const handleShowViewParcelDialog = (e) => {
-    if(e === false) {
+    if (e === false) {
       setShowViewParcelDialog(false);
       setSelectedParcelToView(undefined)
     }
@@ -118,11 +118,21 @@ export function ListOrdersProvider({ children, products = [] }) {
     setSelectedParcelToEdit(parcel)
   }
   const handleShowEditParcelDialog = (e) => {
-    if(e === false) {
+    if (e === false) {
       setShowEditParcelDialog(false);
       setSelectedParcelToEdit(undefined)
     }
   }
+
+  const handleUpdateParcel = async (updatedParcel: any) => {
+    console.log('handleOnUpdateParcel: ', updatedParcel);
+    setData((prevData) =>
+      prevData.map((parcel) =>
+        parcel.id === updatedParcel.id ? { ...parcel, ...updatedParcel } : parcel,
+      ),
+    );
+  }
+
 
   const value = {
     table, totalPages,
@@ -139,8 +149,14 @@ export function ListOrdersProvider({ children, products = [] }) {
   return (
     <ListOrdersContext.Provider value={value}>
       {children}
-      { showViewParcelDialog && <ViewParcelDialog parcel={selectedParcelToView} open={showViewParcelDialog} onOpenChange={handleShowViewParcelDialog} /> }
-      { showEditParcelDialog && <EditParcelDialog parcel={selectedParcelToEdit} open={showEditParcelDialog} onOpenChange={handleShowEditParcelDialog} /> }
+      {showViewParcelDialog && <ViewParcelDialog parcel={selectedParcelToView} open={showViewParcelDialog} onOpenChange={handleShowViewParcelDialog} />}
+      {showEditParcelDialog
+        && <EditParcelDialog
+          parcel={selectedParcelToEdit}
+          open={showEditParcelDialog}
+          onOpenChange={handleShowEditParcelDialog}
+          handleOnUpdateParcel={(e) => handleUpdateParcel(e)}
+        />}
 
     </ListOrdersContext.Provider>
   );

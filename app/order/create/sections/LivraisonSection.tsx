@@ -9,7 +9,7 @@ import InputError from '@/components/ui/input-error';
 
 export const LivraisonSection = () => {
   const {
-    wilayas, errors, data, setData,
+    wilayas, errors, data, setData, parcel
   } = useCreateOrder();
   const [communes, setCommunes] = useState([]);
   const [centers, setCenters] = useState([]);
@@ -17,7 +17,7 @@ export const LivraisonSection = () => {
 
   // get communes
   useEffect(() => {
-    setData('to_commune_id', '');
+    if(!parcel) setData('to_commune_id', '');
     if (data.to_wilaya_id === '') return undefined;
     setCommunes([])
     axios.get('/api/location/communes', {
@@ -30,7 +30,7 @@ export const LivraisonSection = () => {
   // get communes
   useEffect(() => {
     if (data.to_commune_id === '') return undefined;
-    setData('to_center_id', '');
+    if(!parcel) setData('to_center_id', '');
     setCenters([])
     axios.get('/api/location/centers', {
       params: { wilaya_id: data.to_wilaya_id, commune_id: data.to_commune_id }
