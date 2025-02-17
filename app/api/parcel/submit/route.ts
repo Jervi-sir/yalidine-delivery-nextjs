@@ -4,10 +4,11 @@ import axios from 'axios';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import prisma from '@/prisma/prisma';
+import { Parcel } from '@prisma/client';
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session: any = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -25,28 +26,38 @@ export async function POST(req: Request) {
     if (isNaN(parsedPrice)) {
       return NextResponse.json({ message: 'Invalid price' }, { status: 400 });
     }
-    
     let dataToSave = {
       user_id: user_id,
       // order_id: order_id, // should be filled after saving it
-      from_wilaya_name: data.from_wilaya_name, // Use the name directly
+      from_wilaya_id: data.from_wilaya_id.toString(),
+      from_wilaya_name: data.from_wilaya_name,
       firstname: data.firstName,
       familyname: data.familyName,
       contact_phone: data.contactPhone,
+
+      // address
       address: data.address,
-      to_commune_name: data.to_commune_name, // Use the name directly
+      to_wilaya_id: data.to_wilaya_id.toString(),
       to_wilaya_name: data.to_wilaya_name,
+      to_commune_id: data.to_commune_id.toString(),
+      to_commune_name: data.to_commune_name,
+      to_center_id: data.to_center_id.toString(),
+      to_center_name: data.to_center_name,
+      is_stopdesk: data.is_stopdesk,
+      stopdesk_id: data.to_center_id || null, // Handle null values
+
+      // product
       product_list: data.product_list,
       price: parsedPrice,
-      do_insurance: data.do_insurance,
-      declared_value: data.declared_value,
       height: data.height || null, // Handle null values
       width: data.width || null,   // Handle null values
       length: data.length || null,  // Handle null values
       weight: data.weight || null,  // Handle null values
+
+      // order
+      do_insurance: data.do_insurance,
+      declared_value: data.declared_value,
       freeshipping: data.freeshipping,
-      is_stopdesk: data.is_stopdesk,
-      stopdesk_id: data.stopdesk_id || null, // Handle null values
       has_exchange: data.has_exchange,
       product_to_collect: data.product_to_collect || null, // Handle null values
     };
@@ -56,10 +67,12 @@ export async function POST(req: Request) {
     | Save parcel in the database
     |--------------------------------------------------------------------------
     */
+   console.log('dataToSave: ', dataToSave);
     const parcel = await prisma.parcel.create({ data: dataToSave, });
     const order_id = 'user_' + String(user_id) + '_parcel_' + String(parcel.id);
     const dataToFetchToGuepex = { order_id: order_id, ...dataToSave };
-    
+    return NextResponse.json({ ...parcel }, { status: 200 });
+
     /*
     |--------------------------------------------------------------------------
     | Fetch saved parcel to the Guepex api

@@ -6,20 +6,28 @@ import { wilayas as locallySavedWilaya } from '@/database/wilayas';
 import { useToast } from '@/hooks/use-toast';
 const CreateOrderContext = createContext(null);
 
-const initialInput: FormData = {
-  recipient: '', firstName: 'fasfs', familyName: 'sdfsg', contactPhone: '0558054300',
-  //locations
-  from_wilaya_id: undefined, from_wilaya_name: undefined,
-  to_wilaya_id: undefined, to_wilaya_name: undefined,
-  to_commune_id: undefined, to_commune_name: undefined,
-  to_center_id: undefined, to_center_name: undefined, address: 'dgdsghddffgd',
-  order_date: undefined, is_stopdesk: undefined, do_insurance: false, declared_value: 0,
-  freeshipping: false, has_exchange: false, product_id: '', quantity: '', amount: '', price: 2343, product_to_collect: undefined,
-  more_then_5kg: false, order_length: undefined, order_width: undefined, order_height: undefined, order_weight: undefined,
-  product_list: 'sdfsfwer'
-}
 
-export function CreateOrderProvider({ children, products = [] }) {
+
+export function CreateOrderProvider({ children, parcel = null, products = [] }) {
+
+  const initialInput: FormData = {
+    recipient: parcel.recipient || '', firstName: parcel.firstname || '', familyName: parcel.familyname || '', contactPhone: parcel.contact_phone || '',
+    //locations
+    from_wilaya_id: parseInt(parcel.from_wilaya_id) || undefined, from_wilaya_name: parcel.from_wilaya_name || undefined,
+    to_wilaya_id: parseInt(parcel.to_wilaya_id) || undefined, to_wilaya_name: parcel.to_wilaya_name || undefined,
+    to_commune_id: parseInt(parcel.to_commune_id) || undefined, to_commune_name: parcel.to_commune_name || undefined,
+    to_center_id: parseInt(parcel.to_center_id) || undefined, to_center_name: parcel.to_center_name || undefined, 
+    address: parcel.address || 'dgdsghddffgd', order_date: parcel.order_date || undefined, 
+    is_stopdesk: parcel.is_stopdesk || undefined, do_insurance: parcel.do_insurance || false, declared_value: parcel.declared_value || 0,
+    freeshipping: parcel.freeshipping || false, has_exchange: parcel.has_exchange || false, product_id: parcel.product_id || '', 
+    quantity: parcel.quantity || '', amount: parcel.amount || '', price: parcel.price || 2343, 
+    product_to_collect: parcel.product_to_collect || undefined, more_then_5kg: parcel.more_then_5kg || false, 
+    order_length: parcel.order_length || undefined, order_width: parcel.order_width || undefined, 
+    order_height: parcel.order_height || undefined, order_weight: parcel.order_weight || undefined,
+    product_list: parcel.product_list || 'sdfsfwer'
+  }
+
+
   const [processing, setProcessing] = useState(false);
   const [errors, setErrorsJson] = useState<{ [key: string]: string }>({}); // Define the type of errors
   const [data, setDataJson] = useState<FormData>(initialInput);
@@ -65,16 +73,51 @@ export function CreateOrderProvider({ children, products = [] }) {
 
   // get wilayas and set sender's wilaya
   useEffect(() => {
+    console.log('parcel: ', parcel);
     setWilayas(locallySavedWilaya);
-    const savedFromWilaya = localStorage.getItem('from_wilaya_id');
-    if (savedFromWilaya) {
-      setData('from_wilaya_id', parseInt(savedFromWilaya));
-      setData('from_wilaya_name', locallySavedWilaya.find(w => w.id === parseInt(savedFromWilaya)).name);
+    if(parcel) {
+      
     }
-    // axios.get('/api/location/wilayas').then(response => {
-
-    // });
+    else {
+      const savedFromWilaya = localStorage.getItem('from_wilaya_id');
+      console.log('savedFromWilaya: ', savedFromWilaya);
+      if (savedFromWilaya) {
+        setData('from_wilaya_id', parseInt(savedFromWilaya));
+        setData('from_wilaya_name', locallySavedWilaya.find(w => w.id === parseInt(savedFromWilaya)).name);
+      }
+    }
   }, []);
+
+  // Populate form with parcel data when parcel prop changes
+  // useEffect(() => {
+  //   if (parcel) {
+  //     setData('firstName', parcel.firstname || '');
+  //     setData('familyName', parcel.familyname || '');
+  //     setData('contactPhone', parcel.contact_phone || '');
+  //     setData('from_wilaya_id', parcel.from_wilaya_id || undefined);  // need to work on
+  //     setData('from_wilaya_name', parcel.from_wilaya_name || '');
+  //     setData('to_wilaya_id', parcel.to_wilaya_id || undefined);
+  //     setData('to_wilaya_name', parcel.to_wilaya_name || '');         
+  //     setData('to_commune_id', parcel.to_commune_id || undefined);    // need to work on
+  //     setData('to_commune_name', parcel.to_commune_name || '');
+  //     setData('to_center_id', parcel.to_center_id || undefined);      // need to work on   
+  //     setData('to_center_name', parcel.to_center_name || '');
+  //     setData('address', parcel.address || '');
+  //     setData('is_stopdesk', parcel.is_stopdesk || false);
+  //     setData('do_insurance', parcel.do_insurance);
+  //     setData('declared_value', parcel.declared_value);
+  //     setData('freeshipping', parcel.freeshipping);
+  //     setData('product_list', parcel.product_list || '');
+  //     setData('price', parcel.price || undefined);
+  //     setData('order_length', parcel.length || undefined);
+  //     setData('order_width', parcel.width || undefined);
+  //     setData('order_height', parcel.height || undefined);
+  //     setData('order_weight', parcel.weight || undefined);
+  //   } else {
+  //     // Reset the form when parcel is null
+  //     setDataJson(initialInput);
+  //   }
+  // }, [parcel]);
 
   const variableIsNotValid = (value) => {
     if (value === undefined) return true;

@@ -4,6 +4,8 @@ import { ColumnFiltersState, getCoreRowModel, getFilteredRowModel, getPagination
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { columns } from './columns';
 import { getSession } from 'next-auth/react';
+import { ViewParcelDialog } from './view-parcel';
+import { EditParcelDialog } from './edit-parcel';
 const ListOrdersContext = createContext(null);
 
 export function ListOrdersProvider({ children, products = [] }) {
@@ -23,7 +25,6 @@ export function ListOrdersProvider({ children, products = [] }) {
   const [isStopdeskFilter, setIsStopdeskFilter] = useState<number | undefined>(undefined);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [doInsuranceFilter, setDoInsuranceFilter] = useState<boolean | undefined>(undefined);
-
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   const getUserId = async () => {
@@ -73,7 +74,7 @@ export function ListOrdersProvider({ children, products = [] }) {
       }
     };
 
-    if(userId) {
+    if (userId) {
       fetchData();
     }
   }, [
@@ -96,6 +97,33 @@ export function ListOrdersProvider({ children, products = [] }) {
     state: { sorting, columnFilters, columnVisibility, rowSelection, },
   });
 
+  const [showViewParcelDialog, setShowViewParcelDialog] = useState(false);
+  const [selectedParcelToView, setSelectedParcelToView] = useState(undefined);
+  const showThisParcel = (parcel) => {
+    setShowViewParcelDialog(true);
+    setSelectedParcelToView(parcel)
+  }
+  const handleShowViewParcelDialog = (e) => {
+    if(e === false) {
+      setShowViewParcelDialog(false);
+      setSelectedParcelToView(undefined)
+    }
+  }
+
+  const [showEditParcelDialog, setShowEditParcelDialog] = useState(false);
+  const [selectedParcelToEdit, setSelectedParcelToEdit] = useState(undefined);
+  const editThisParcel = (parcel) => {
+    console.log('parcel: ', parcel);
+    setShowEditParcelDialog(true);
+    setSelectedParcelToEdit(parcel)
+  }
+  const handleShowEditParcelDialog = (e) => {
+    if(e === false) {
+      setShowEditParcelDialog(false);
+      setSelectedParcelToEdit(undefined)
+    }
+  }
+
   const value = {
     table, totalPages,
     totalCount, setCurrentPage, currentPage,
@@ -104,12 +132,16 @@ export function ListOrdersProvider({ children, products = [] }) {
     isStopdeskFilter, setIsStopdeskFilter,
     statusFilter, setStatusFilter,
     doInsuranceFilter, setDoInsuranceFilter,
-    isLoadingData
+    isLoadingData,
+    showThisParcel, editThisParcel
   };
 
   return (
     <ListOrdersContext.Provider value={value}>
       {children}
+      { showViewParcelDialog && <ViewParcelDialog parcel={selectedParcelToView} open={showViewParcelDialog} onOpenChange={handleShowViewParcelDialog} /> }
+      { showEditParcelDialog && <EditParcelDialog parcel={selectedParcelToEdit} open={showEditParcelDialog} onOpenChange={handleShowEditParcelDialog} /> }
+
     </ListOrdersContext.Provider>
   );
 }

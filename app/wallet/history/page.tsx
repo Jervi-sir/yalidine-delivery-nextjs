@@ -1,3 +1,4 @@
+'use client'
 import useHeadbarInsetStore from "@/zustand/headbarInsetStore";
 import { ListWithdrawalsProvider } from "./list-withdrawals-provider";
 import { WithdrawalTable } from "./withdrawal-table";

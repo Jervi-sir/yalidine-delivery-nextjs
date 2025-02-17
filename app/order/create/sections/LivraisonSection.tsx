@@ -45,6 +45,7 @@ export const LivraisonSection = () => {
       <SelectDropdownComponent
         label={'Delivery Type'}
         placeholder={''}
+        initialValue={data.is_stopdesk}
         values={[{ id: false, name: 'Commune' }, { id: true, name: 'Stopdesk' }]}
         handleOnValueChange={(value) => {
           setData('to_commune_id', '');

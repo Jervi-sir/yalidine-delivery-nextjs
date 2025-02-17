@@ -10,6 +10,10 @@ import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { ViewParcelDialog } from "./view-parcel";
 import { useState } from "react";
+import { EditParcelDialog } from "./edit-parcel";
+import { z } from "zod";
+import { useCreateOrder } from "../create/createOrderContext";
+import { useListOrders } from "./list-orders-provider";
 
 export const columns: ColumnDef<Parcel>[] = [
   {
@@ -91,7 +95,22 @@ export const columns: ColumnDef<Parcel>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const parcel = row.original;
-      const [open, setOpen] = useState(false);
+      const { showThisParcel, editThisParcel } = useListOrders();
+
+      
+      const handleSave = (values) => {
+        //  Here you would make your API call to update the parcel
+        //  For example:
+        //  updateParcel(parcel.id, values)
+        //    .then(() => {
+        //      // Refresh your data or update the row in the table
+        //    })
+        //    .catch(error => {
+        //      console.error("Error updating parcel:", error);
+        //      toast.error("Failed to update parcel.");
+        //    });
+        console.log("Saving:", values); // Placeholder - replace with your API call
+      };
 
       return (
         <>
@@ -110,14 +129,15 @@ export const columns: ColumnDef<Parcel>[] = [
                 Copy tracking ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setOpen(true)}>
+              <DropdownMenuItem onClick={() => showThisParcel(parcel)}>
                 View parcel details
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => editThisParcel(parcel)}>
+                Edit parcel details
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <ViewParcelDialog parcel={parcel} open={open} onOpenChange={setOpen} />
         </>
-
       );
     },
   },
