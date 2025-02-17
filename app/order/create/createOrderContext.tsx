@@ -139,7 +139,11 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
         if (onUpdate) {
           try {
             // await onUpdate(data); // Call the onUpdate function
-            const response = await axios.put(`/api/parcel/${parcel?.id}`, data);
+            const response = await axios.put(`/api/parcel/${parcel?.id}`, { 
+              tracking: parcel?.tracking, 
+              order_id: parcel?.order_id,
+              ...data 
+            });
             // onSave(response.data); // Notify the parent component of the update
             // onOpenChange(false); // Close the dialog
             toast({
