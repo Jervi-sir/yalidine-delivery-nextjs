@@ -19,22 +19,28 @@
   - push it to the api @done
   - update it in the database @done
 
-- list my orders
-  - paginate
-  - filter
+- list my orders @done
+  - paginate @done
+  - filter @done
 
-- edit an order
-  - update the order in the database
-  - push the update to the guepex
+- edit an order @done
+  - update the order in the database @done
+  - push the update to the guepex @done
 
 - delete a parcel
   - delete in the database
   - delete in the guepex
 
-- webhooks
+- webhooks @done
 - 
 - add a queue that will respect the guepex rate limit of 5req/s
 - 
-- create wallet table
-- list my histories of withdraw
-- request money withdraw
+- print parcels
+  - select by bulk @done
+  - fetch print bulk
+    - update if printed
+  - print this parcel only
+    - update if printed
+- create wallet table @done
+- list my histories of withdraw @done
+- request money withdraw @done

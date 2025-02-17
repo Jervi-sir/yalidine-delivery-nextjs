@@ -5,7 +5,7 @@ import { wilayas } from '@/database/wilayas';
 import { useListOrders } from './list-orders-provider';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, PrinterIcon } from 'lucide-react';
 import axios from 'axios';
 
 export const FilterSection = () => {
@@ -14,7 +14,8 @@ export const FilterSection = () => {
     communeFilter, setCommuneFilter, 
     isStopdeskFilter, setIsStopdeskFilter, 
     statusFilter, setStatusFilter, 
-    doInsuranceFilter, setDoInsuranceFilter
+    doInsuranceFilter, setDoInsuranceFilter,
+    handlePrint
   } = useListOrders();
 
   const [wilayaId, setWilayaId] = useState(undefined);
@@ -80,6 +81,10 @@ export const FilterSection = () => {
           error={null}
         />
         <FilterShownColumnComponent />
+        <Button variant='outline' onClick={handlePrint}>
+          <PrinterIcon />
+          Print Now
+        </Button>
       </div>
     </>
   );

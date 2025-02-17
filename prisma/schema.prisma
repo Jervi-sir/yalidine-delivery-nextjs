@@ -65,6 +65,8 @@ model Parcel {
   event_id    String? // Add this line
   occurred_at DateTime? // Add this line
 
+  is_printed Boolean @default(false)
+
   user User? @relation(fields: [user_id], references: [id]) // Relation to User model
 
   created_at DateTime @default(now())

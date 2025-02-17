@@ -133,6 +133,24 @@ export function ListOrdersProvider({ children, products = [] }) {
     );
   }
 
+  const selectedParcels = table
+    .getSelectedRowModel()
+    .rows.map((row) => row.original);
+
+  const handlePrint = () => {
+    if (selectedParcels.length === 0) {
+      alert("No parcels selected for printing."); // Or use a toast notification
+      return;
+    }
+    // Implement your printing logic here
+    console.log("Printing parcels:", selectedParcels);
+    // Example: Extract tracking numbers for printing
+    const parcelsToPrint = selectedParcels.map((parcel) => parcel.label);
+    console.log("Tracking numbers to print:", parcelsToPrint);
+    // Call your printing API or service with the tracking numbers
+    // printLabels(trackingNumbers);
+  }
+
 
   const value = {
     table, totalPages,
@@ -143,7 +161,8 @@ export function ListOrdersProvider({ children, products = [] }) {
     statusFilter, setStatusFilter,
     doInsuranceFilter, setDoInsuranceFilter,
     isLoadingData,
-    showThisParcel, editThisParcel
+    showThisParcel, editThisParcel,
+    handlePrint
   };
 
   return (

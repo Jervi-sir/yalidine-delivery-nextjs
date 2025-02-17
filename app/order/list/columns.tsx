@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Parcel } from "@prisma/client";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, PrinterIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { ViewParcelDialog } from "./view-parcel";
 import { useState } from "react";
@@ -18,23 +18,35 @@ import { useListOrders } from "./list-orders-provider";
 export const columns: ColumnDef<Parcel>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          ( table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
-          ) as boolean
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    header: ({ table }) => {
+      const { handlePrint } = useListOrders();
+
+      return (
+        <PrinterIcon size={16} onClick={handlePrint} className="cursor-pointer hover:scale-125" />
+          // <Checkbox
+          //   checked={
+          //     (table.getIsAllPageRowsSelected() ||
+          //       (table.getIsSomePageRowsSelected() && "indeterminate")) as boolean
+          //   }
+          //   onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          //   aria-label="Select all"
+          // />
+      )
+    },
+    cell: ({ row }) => {
+      const parcel = row.original;
+      const canSelect = !!parcel.label; // Only allow selection if tracking exists
+
+      if(canSelect)
+        return (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)} // Correct toggle
+            aria-label="Select row"
+            disabled={!canSelect} // Disable checkbox if no tracking
+          />
+        );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -97,7 +109,7 @@ export const columns: ColumnDef<Parcel>[] = [
       const parcel = row.original;
       const { showThisParcel, editThisParcel } = useListOrders();
 
-      
+
       const handleSave = (values) => {
         //  Here you would make your API call to update the parcel
         //  For example:
