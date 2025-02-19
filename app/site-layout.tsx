@@ -24,13 +24,7 @@ export const SiteLayout = ({ children }) => {
           // Render AuthLayout or specific provider for /auth routes
           <>{children}</> // Replace with your AuthLayout
         ) : (
-          <SidebarProvider
-            style={
-              {
-                "--sidebar-width": "19rem",
-              } as React.CSSProperties
-            }
-          >
+          <SidebarProvider style={{"--sidebar-width": "16rem",} as React.CSSProperties}>
             <AppSidebar />
             <SidebarInset>
               <AppHeader />

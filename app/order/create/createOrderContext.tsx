@@ -16,14 +16,14 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
     to_wilaya_id: parseInt(parcel?.to_wilaya_id) || undefined, to_wilaya_name: parcel?.to_wilaya_name || undefined,
     to_commune_id: parseInt(parcel?.to_commune_id) || undefined, to_commune_name: parcel?.to_commune_name || undefined,
     to_center_id: parseInt(parcel?.to_center_id) || undefined, to_center_name: parcel?.to_center_name || undefined,
-    address: parcel?.address || 'dgdsghddffgd', order_date: parcel?.order_date || undefined,
+    address: parcel?.address || undefined, order_date: parcel?.order_date || undefined,
     is_stopdesk: parcel?.is_stopdesk || undefined, do_insurance: parcel?.do_insurance || false, declared_value: parcel?.declared_value || 0,
     freeshipping: parcel?.freeshipping || false, has_exchange: parcel?.has_exchange || false, product_id: parcel?.product_id || '',
     quantity: parcel?.quantity || '', amount: parcel?.amount || '', price: parcel?.price || 2343,
     product_to_collect: parcel?.product_to_collect || undefined, more_then_5kg: parcel?.more_then_5kg || false,
     order_length: parcel?.order_length || undefined, order_width: parcel?.order_width || undefined,
     order_height: parcel?.order_height || undefined, order_weight: parcel?.order_weight || undefined,
-    product_list: parcel?.product_list || 'sdfsfwer'
+    product_list: parcel?.product_list || undefined
   }
 
   const [processing, setProcessing] = useState(false);

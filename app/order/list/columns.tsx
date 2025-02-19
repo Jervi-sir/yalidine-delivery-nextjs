@@ -14,24 +14,16 @@ import Link from "next/link";
 export const columns: ColumnDef<Parcel>[] = [
   {
     id: "select",
-    header: ({ table }) => {
+    header: () => {
       const { handleShowPrintBulkConfirmation } = useListOrders();
 
       return (
         <PrinterIcon size={16} onClick={handleShowPrintBulkConfirmation} className="cursor-pointer hover:scale-125" />
-        // <Checkbox
-        //   checked={
-        //     (table.getIsAllPageRowsSelected() ||
-        //       (table.getIsSomePageRowsSelected() && "indeterminate")) as boolean
-        //   }
-        //   onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        //   aria-label="Select all"
-        // />
       )
     },
     cell: ({ row }) => {
       const parcel = row.original;
-      const notPrintedYet = !parcel.labels || !parcel.label;
+      const notPrintedYet = !parcel.label; //? !parcel.labels || 
 
       if (notPrintedYet)
         return (
@@ -151,11 +143,7 @@ export const columns: ColumnDef<Parcel>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const parcel = row.original;
-      const { showThisParcel, editThisParcel, showThisBulkPrint } = useListOrders();
-
-      const handlePrint = (values) => {
-        console.log("Saving:", values);
-      };
+      const { showThisParcel, editThisParcel, showThisBulkPrint } = useListOrders(); // eslint-disable-next-line react-hooks/exhaustive-deps
 
       return (
         <>

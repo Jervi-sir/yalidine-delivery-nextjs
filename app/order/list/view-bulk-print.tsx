@@ -19,7 +19,7 @@ export function ViewBlukPrint({ parcel, open, onOpenChange }) {
           <div className="flex flex-wrap items-center justify-center gap-4">
             {
               parcel.grouped_tracking?.split(',').map((item, index) => (
-                <Badge>{item}</Badge>
+                <Badge key={index}>{item}</Badge>
               ))
             }
           </div>

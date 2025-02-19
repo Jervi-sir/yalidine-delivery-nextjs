@@ -22,61 +22,56 @@ export function ViewParcelDialog({ parcel, open, onOpenChange }: ViewParcelDialo
             View details for parcel with tracking ID: {parcel.tracking}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="firstname" className="text-right">
-              First Name
+        <div className="grid grid-cols-2 gap-4 py-4">
+          <div className="flex flex-col gap-4">
+            <Label htmlFor="firstname">
+              First Name: {parcel.firstname}
             </Label>
-            <Input
-              id="firstname"
-              value={parcel.firstname}
-              className="col-span-2"
-              readOnly
-            />
+            <Label htmlFor="firstname">
+              Family Name: {parcel.familyname}
+            </Label>
+            <Label htmlFor="firstname">
+              contact_phone: {parcel.contact_phone}
+            </Label>
+            <Label htmlFor="firstname">
+              Tracking: {parcel.tracking || "N/A"}
+            </Label>
+            <Label htmlFor="firstname">
+              Commune: {parcel.to_commune_name}
+            </Label>
+            <Label htmlFor="firstname">
+              Wilaya: {parcel.to_wilaya_name}
+            </Label>
+            { parcel.stopdesk_name
+              && <Label htmlFor="firstname">
+                Stopdesk: {parcel.stopdesk_name}
+              </Label>
+            }
+            { parcel.address
+              && <Label htmlFor="address">
+                Address: {parcel.address}
+              </Label>
+            }
           </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="familyname" className="text-right">
-              Family Name
+          <div className="flex flex-col gap-4">
+            <Label htmlFor="firstname">
+              price: {parcel.price}
             </Label>
-            <Input
-              id="familyname"
-              value={parcel.familyname}
-              className="col-span-2"
-              readOnly
-            />
-          </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="tracking" className="text-right">
-              Tracking
+            <Label htmlFor="firstname">
+              delivery_fee: {parcel.delivery_fee}
             </Label>
-            <Input
-              id="tracking"
-              value={parcel.tracking || "N/A"}
-              className="col-span-2"
-              readOnly
-            />
-          </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="commune" className="text-right">
-              Commune
+            <Label htmlFor="firstname">
+              parcel_type: {parcel.parcel_type || "N/A"}
             </Label>
-            <Input
-              id="commune"
-              value={parcel.to_commune_name}
-              className="col-span-2"
-              readOnly
-            />
-          </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="wilaya" className="text-right">
-              Wilaya
+            <Label htmlFor="firstname">
+              status: {parcel.status}
             </Label>
-            <Input
-              id="wilaya"
-              value={parcel.to_wilaya_name}
-              className="col-span-2"
-              readOnly
-            />
+            <Label htmlFor="firstname">
+              freeshipping: {parcel.freeshipping ? 'Yes' : 'No'}
+            </Label>
+            <Label htmlFor="firstname">
+              payment_status: {parcel.payment_status || "N/A"}
+            </Label>
           </div>
           {/* Add more fields as needed */}
         </div>

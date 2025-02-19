@@ -2,7 +2,7 @@ import InputError from '@/components/ui/input-error';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import React from 'react';
 
-export const SelectDropdownComponent = ({ placeholder, values, initialValue = undefined, error, handleOnValueChange, disabled = false }) => {
+export const SelectDropdownComponent = ({ isWilaya = false, placeholder, values, initialValue = undefined, error, handleOnValueChange, disabled = false }) => {
   return (
     <div className='flex flex-col min-w-40'>
       <div className='flex items-center gap-2 border border-input rounded-md'>
@@ -18,6 +18,7 @@ export const SelectDropdownComponent = ({ placeholder, values, initialValue = un
             <SelectGroup>
               {values.map((value, index) => (
                 <SelectItem key={index} value={value}>
+                  { isWilaya  && value.id > 0 && value.id + '. ' }
                   {value.name}
                 </SelectItem>
               ))}

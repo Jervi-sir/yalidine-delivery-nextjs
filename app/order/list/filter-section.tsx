@@ -48,11 +48,12 @@ export const FilterSection = () => {
               setWilayaId(e.id)
             }
           }}
+          isWilaya={true}
           error={null}
         />
         <SelectDropdownComponent
           placeholder={'Filter by Commune'}
-          values={[{ id: 0, name: 'all'}, ...communes]}
+          values={[{ id: 0, name: 'all', value: 'all'}, ...communes]}
           handleOnValueChange={(e) => {
             if(e.id === 0) {
               setCommuneFilter(undefined)
@@ -70,14 +71,14 @@ export const FilterSection = () => {
         />
         <SelectDropdownComponent
           placeholder={'Filter by Status'}
-          values={[{ id: 1, name: 'Pending' }, { id: 2, name: 'Delivered' }]}
-          handleOnValueChange={(e) => setStatusFilter(e.target.value)}
+          values={[{ id: 0, name: 'coming soon', value: undefined}]}
+          handleOnValueChange={(e) => {}}
           error={null}
         />
         <SelectDropdownComponent
           placeholder={'Do Insurance'}
-          values={['with insurance', 'no insurance']}
-          handleOnValueChange={(e) => setStatusFilter(e.target.value)}
+          values={[{ id: 0, name: 'coming soon', value: undefined}]}
+          handleOnValueChange={(e) => {}}
           error={null}
         />
         <FilterShownColumnComponent />

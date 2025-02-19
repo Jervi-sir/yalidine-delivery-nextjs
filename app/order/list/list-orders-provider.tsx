@@ -23,10 +23,10 @@ export function ListOrdersProvider({ children, products = [] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   // Filtering state
-  const [wilayaFilter, setWilayaFilter] = useState<string>("");
-  const [communeFilter, setCommuneFilter] = useState<string>("");
+  const [wilayaFilter, setWilayaFilter] = useState("");
+  const [communeFilter, setCommuneFilter] = useState("");
   const [isStopdeskFilter, setIsStopdeskFilter] = useState<number | undefined>(undefined);
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [doInsuranceFilter, setDoInsuranceFilter] = useState<boolean | undefined>(undefined);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
@@ -178,8 +178,8 @@ export function ListOrdersProvider({ children, products = [] }) {
       setRowSelection({});
       setShowPrintBulkConfirmation(false);
 
-      const newBulkUrl = fetchedParcels[0].labels;
-      const newSingleUrl = fetchedParcels[0].label;
+      const newBulkUrl = fetchedParcels[0].labels || null;
+      const newSingleUrl = fetchedParcels[0].label || null;
       if(newBulkUrl) {
         window.location.href = newBulkUrl; 
       } else {
