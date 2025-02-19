@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Request</title>
+</head>
+<body>
+
+    <button onclick="sendRequest()">Send Request</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function sendRequest() {
+            const url = 'https://guepex.app/app/bordereau.php';
+            const headers = {
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Cache-Control': 'max-age=0',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Cookie': 'uid=100053850; token=K8sbaGA9qgC3hE5knWIi; PHPSESSID=623fq9cccuvdtdae1eomsio4d2',
+                'If-Modified-Since': 'Tue, 18 Feb 2025 21:16:38 GMT',
+                'Origin': 'https://guepex.app',
+                'Referer': 'https://guepex.app/app/colis/index.php',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'same-origin',
+                'Sec-Fetch-User': '?1',
+                'Sec-GPC': '1',
+                'Upgrade-Insecure-Requests': '1',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+                'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132", "Brave";v="132"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"'
+            };
+
+            const body = 'yal-LWDZ70=on&yal-VVEN16=on&yal-ESXP19=on&yal-RUFF15=on&yal-ZFEZ95=on&filterQuery=%3F%26&submit=print';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body,
+                    credentials: 'include' // Important if authentication is required
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const text = await response.text();
+                document.getElementById('output').textContent = text;
+            } catch (error) {
+                document.getElementById('output').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -14,7 +14,6 @@ export const LivraisonSection = () => {
   const [communes, setCommunes] = useState([]);
   const [centers, setCenters] = useState([]);
 
-
   // get communes
   useEffect(() => {
     if(!parcel) setData('to_commune_id', '');
@@ -89,7 +88,8 @@ export const LivraisonSection = () => {
           values={centers}
           initialValue={data.to_center_id}
           handleOnValueChange={(value) => {
-            setData('to_center_id', value);
+            console.log('value: ', Number(centers.find(c => c.id === value).center_id));
+            setData('to_center_id', Number(centers.find(c => c.id === value).center_id));
             setData('to_center_name', centers.find(c => c.id === value).name);
           }}
           error={errors.to_center_id}

@@ -60,6 +60,8 @@ model Parcel {
   message   String? // Add this line
   success   Boolean? // Add this line
 
+  grouped_tracking String? // Add this line
+
   status      String? // Add this line
   payment_id  String? // Add this line
   event_id    String? // Add this line

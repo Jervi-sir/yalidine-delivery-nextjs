@@ -5,8 +5,10 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import prisma from '@/prisma/prisma';
 import { Parcel } from '@prisma/client';
+import ShortUniqueId from 'short-unique-id';
 
 export async function POST(req: Request) {
+  const { randomUUID } = new ShortUniqueId({ length: 10 });
   try {
     const session: any = await getServerSession(authOptions);
     if (!session?.user) {
@@ -28,7 +30,7 @@ export async function POST(req: Request) {
     }
     let dataToSave = {
       user_id: user_id,
-      // order_id: order_id, // should be filled after saving it
+      order_id: 'user_' + String(user_id) + '_uuid_' + randomUUID(),
       from_wilaya_id: data.from_wilaya_id,
       from_wilaya_name: data.from_wilaya_name,
       firstname: data.firstName,
@@ -67,10 +69,10 @@ export async function POST(req: Request) {
     | Save parcel in the database
     |--------------------------------------------------------------------------
     */
-   console.log('dataToSave: ', dataToSave);
+    console.log('dataToSave: ', dataToSave);
     const parcel = await prisma.parcel.create({ data: dataToSave, });
-    const order_id = 'user_' + String(user_id) + '_parcel_' + String(parcel.id);
-    const dataToFetchToGuepex = { order_id: order_id, ...dataToSave };
+    // const order_id = 'user_' + String(user_id) + '_parcel_' + String(parcel.id);
+    const dataToFetchToGuepex = { ...dataToSave };
     return NextResponse.json({ ...parcel }, { status: 200 });
 
     /*
@@ -79,6 +81,7 @@ export async function POST(req: Request) {
     |--------------------------------------------------------------------------
     */
 
+    //! Will be removed
     const apiUrl = process.env.GUEPEX_API_URL; // the parcel's creation endpoint
     const apiId = process.env.GUEPEX_API_ID; // your api ID
     const apiToken = process.env.GUEPEX_API_TOKEN; // your api token

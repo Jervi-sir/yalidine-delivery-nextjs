@@ -17,3 +17,8 @@ npx prisma generate
 ### Tunnel
 https://docs.zrok.io/docs/getting-started/
 https://myzrok.io/settings
+
+
+### disable webwork in console
+self.__WB_DISABLE_DEV_LOGS = true;
+https://stackoverflow.com/questions/65952421/nextjs-remove-workbox-console-log-messages

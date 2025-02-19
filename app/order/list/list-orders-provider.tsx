@@ -6,6 +6,9 @@ import { columns } from './columns';
 import { getSession } from 'next-auth/react';
 import { ViewParcelDialog } from './view-parcel';
 import { EditParcelDialog } from './edit-parcel';
+import axios from 'axios';
+import { ViewBlukPrint } from './view-bulk-print';
+import { ShowPrintBulkConfirmation } from './show-print-bulk-confirmation';
 const ListOrdersContext = createContext(null);
 
 export function ListOrdersProvider({ children, products = [] }) {
@@ -82,6 +85,7 @@ export function ListOrdersProvider({ children, products = [] }) {
     isStopdeskFilter, statusFilter, doInsuranceFilter,
   ]);
 
+  const [columnOrder, setColumnOrder] = useState<string[]>(['client', 'tracking', 'to_wilaya_name', 'is_stopdesk', 'do_insurance', 'status', 'freeshipping', 'product_list']); //optionally initialize the column order
 
   const table = useReactTable({
     data,
@@ -94,8 +98,22 @@ export function ListOrdersProvider({ children, products = [] }) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    state: { sorting, columnFilters, columnVisibility, rowSelection, },
+    state: { sorting, columnFilters, columnVisibility, rowSelection },  //, columnOrder
+    onColumnOrderChange: setColumnOrder,
   });
+
+  const [showBulkPrintParcels, setShowBulkPrintParcels] = useState(false);
+  const [selectBulkPrintParcel, setSelectBulkPrintParcel] = useState(undefined);
+  const showThisBulkPrint = (parcel) => {
+    setShowBulkPrintParcels(true);
+    setSelectBulkPrintParcel(parcel)
+  }
+  const handleShowBulkPrintParcels = (e) => {
+    if (e === false) {
+      setShowBulkPrintParcels(false);
+      setSelectBulkPrintParcel(undefined)
+    }
+  }
 
   const [showViewParcelDialog, setShowViewParcelDialog] = useState(false);
   const [selectedParcelToView, setSelectedParcelToView] = useState(undefined);
@@ -133,24 +151,46 @@ export function ListOrdersProvider({ children, products = [] }) {
     );
   }
 
+
+  const [showPrintBulkConfirmation, setShowPrintBulkConfirmation] = useState(false);
+
   const selectedParcels = table
     .getSelectedRowModel()
     .rows.map((row) => row.original);
-
-  const handlePrint = () => {
+  const handleShowPrintBulkConfirmation = () => {
+    setShowPrintBulkConfirmation(true);
+  }
+  const handlePrint = async () => {
     if (selectedParcels.length === 0) {
       alert("No parcels selected for printing."); // Or use a toast notification
       return;
     }
-    // Implement your printing logic here
-    console.log("Printing parcels:", selectedParcels);
-    // Example: Extract tracking numbers for printing
-    const parcelsToPrint = selectedParcels.map((parcel) => parcel.label);
-    console.log("Tracking numbers to print:", parcelsToPrint);
-    // Call your printing API or service with the tracking numbers
-    // printLabels(trackingNumbers);
+    setShowPrintBulkConfirmation(true);
+    await fetchBulkParcel();
   }
+  const fetchBulkParcel = async () => {
+    try {
+      const response = await axios.post('/api/guepex/create-parcel', selectedParcels);
+      const fetchedParcels = response.data.parcels;
+      fetchedParcels.forEach(parcel => {
+        handleUpdateParcel(parcel)
+      });
+      setRowSelection({});
+      setShowPrintBulkConfirmation(false);
 
+      const newBulkUrl = fetchedParcels[0].labels;
+      const newSingleUrl = fetchedParcels[0].label;
+      if(newBulkUrl) {
+        window.location.href = newBulkUrl; 
+      } else {
+        window.location.href = newSingleUrl; 
+      }
+      
+
+    } catch (error) {
+      console.error('error: ', error);
+    }
+  }
 
   const value = {
     table, totalPages,
@@ -162,7 +202,7 @@ export function ListOrdersProvider({ children, products = [] }) {
     doInsuranceFilter, setDoInsuranceFilter,
     isLoadingData,
     showThisParcel, editThisParcel,
-    handlePrint
+    handlePrint, showThisBulkPrint, handleShowPrintBulkConfirmation
   };
 
   return (
@@ -176,6 +216,22 @@ export function ListOrdersProvider({ children, products = [] }) {
           onOpenChange={handleShowEditParcelDialog}
           handleOnUpdateParcel={(e) => handleUpdateParcel(e)}
         />}
+      {showBulkPrintParcels
+        && <ViewBlukPrint
+          parcel={selectBulkPrintParcel}
+          onOpenChange={handleShowBulkPrintParcels}
+          open={showBulkPrintParcels}
+        />
+      }
+
+      { showPrintBulkConfirmation &&
+        <ShowPrintBulkConfirmation 
+          parcels={selectedParcels} 
+          open={showPrintBulkConfirmation} 
+          onOpenChange={() => setShowPrintBulkConfirmation(false)} 
+          handleOnConfirm={handlePrint} 
+        />
+      }
 
     </ListOrdersContext.Provider>
   );
@@ -188,4 +244,37 @@ export const useListOrders = () => {
   }
   return context;
 };
+
+
+// const printAllUrls = async (parcelsToPrint) => {
+//   for (const url of parcelsToPrint) {
+//     try {
+//       await printSingleUrl(url);
+//     } catch (error) {
+//       console.error(`Failed to print ${url}:`, error);
+//     }
+//   }
+// };
+// // Function to open and print a single URL
+// const printSingleUrl = (url) => {
+//   return new Promise((resolve: any, reject) => {
+//     const iframe = document.createElement('iframe');
+//     iframe.style.display = 'none';
+//     iframe.src = url;
+//     document.body.appendChild(iframe);
+//     iframe.onload = () => {
+//       try {
+//         iframe.contentWindow.print();
+//         resolve();
+//       } catch (error) {
+//         reject(error);
+//       }
+//       document.body.removeChild(iframe);
+//     };
+//     iframe.onerror = (error) => {
+//       reject(error);
+//       document.body.removeChild(iframe);
+//     };
+//   });
+// };
 

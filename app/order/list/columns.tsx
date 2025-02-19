@@ -8,42 +8,38 @@ import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, PrinterIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
-import { ViewParcelDialog } from "./view-parcel";
-import { useState } from "react";
-import { EditParcelDialog } from "./edit-parcel";
-import { z } from "zod";
-import { useCreateOrder } from "../create/createOrderContext";
 import { useListOrders } from "./list-orders-provider";
+import Link from "next/link";
 
 export const columns: ColumnDef<Parcel>[] = [
   {
     id: "select",
     header: ({ table }) => {
-      const { handlePrint } = useListOrders();
+      const { handleShowPrintBulkConfirmation } = useListOrders();
 
       return (
-        <PrinterIcon size={16} onClick={handlePrint} className="cursor-pointer hover:scale-125" />
-          // <Checkbox
-          //   checked={
-          //     (table.getIsAllPageRowsSelected() ||
-          //       (table.getIsSomePageRowsSelected() && "indeterminate")) as boolean
-          //   }
-          //   onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          //   aria-label="Select all"
-          // />
+        <PrinterIcon size={16} onClick={handleShowPrintBulkConfirmation} className="cursor-pointer hover:scale-125" />
+        // <Checkbox
+        //   checked={
+        //     (table.getIsAllPageRowsSelected() ||
+        //       (table.getIsSomePageRowsSelected() && "indeterminate")) as boolean
+        //   }
+        //   onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        //   aria-label="Select all"
+        // />
       )
     },
     cell: ({ row }) => {
       const parcel = row.original;
-      const canSelect = !!parcel.label; // Only allow selection if tracking exists
+      const notPrintedYet = !parcel.labels || !parcel.label;
 
-      if(canSelect)
+      if (notPrintedYet)
         return (
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)} // Correct toggle
             aria-label="Select row"
-            disabled={!canSelect} // Disable checkbox if no tracking
+            disabled={!notPrintedYet} // Disable checkbox if no tracking
           />
         );
     },
@@ -51,77 +47,114 @@ export const columns: ColumnDef<Parcel>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "firstname",
-    header: "First Name",
+    accessorKey: "Client",
+    header: "Client",
+    cell: ({ row }) => {
+      const parcel = row.original;
+      const firstname = parcel.firstname;
+      const familyname = parcel.familyname;
+      const contact_phone = parcel.contact_phone;
+
+      return (
+        <div className="flex flex-col">
+          <span className="truncate font-semibold">
+            {firstname}
+            {' - '}
+            {familyname}
+          </span>
+          <span className="truncate text-xs">{contact_phone}</span>
+        </div>
+      )
+    },
+
   },
   {
-    accessorKey: "familyname",
-    header: "Family Name",
-  },
-  {
-    accessorKey: "tracking",
+    accessorKey: "Tracking",
     header: "Tracking",
-    cell: ({ row }) => row.original.tracking && <Badge>{row.original.tracking}</Badge>,
+    cell: ({ row }) => row.original.tracking && <Badge variant="outline" className="text-nowrap">{row.original.tracking}</Badge>,
   },
   {
-    accessorKey: "to_commune_name",
-    header: "Commune",
+    accessorKey: "Full Loaction",
+    header: "Loaction",
+    cell: ({ row }) => {
+      const parcel = row.original;
+      const to_wilaya_name = parcel.to_wilaya_name;
+      const to_commune_name = parcel.to_commune_name;
+      const address = parcel.address;
+      const is_stopdesk = parcel.is_stopdesk;
+
+      return (
+        <div className="flex flex-col">
+          <span className="truncate font-semibold">
+            {to_wilaya_name}
+          </span>
+          <span className="truncate text-xs">{to_commune_name}</span>
+          {(address && !is_stopdesk) && <span className="truncate text-xs">{address}</span>}
+        </div>
+      )
+    },
   },
   {
-    accessorKey: "to_wilaya_name",
-    header: "Wilaya",
-  },
-  {
-    accessorKey: "is_stopdesk",
+    accessorKey: "Stop Desk",
     header: "Stop Desk",
     cell: ({ row }) => (row.original.is_stopdesk ? "Yes" : "No"),
   },
   {
-    accessorKey: "do_insurance",
+    accessorKey: "Insurance",
     header: "Insurance",
     cell: ({ row }) => (row.original.do_insurance ? "Yes" : "No"),
   },
   {
-    accessorKey: "status",
+    accessorKey: "Status",
     header: "Status",
     cell: ({ row }) => {
-      if (row.original.status === 'ready') return <Badge>{row.original.status}</Badge>
-      if (row.original.status === 'receivable') return <Badge>{row.original.status}</Badge>
+      const parcel = row.original;
+      let status = '';
+      let textColor = 'black';
+      if (parcel?.status === 'receivable') { status = 'green'; textColor = 'white'; }
+      if (parcel?.status === 'ready') { status = 'greenyellow'; textColor = 'darkgreen'; }
+      if (parcel?.status)
+        return (
+          <Badge style={{ backgroundColor: status, color: textColor }}>{parcel?.status}</Badge>
+        )
+      else
+        return (
+          <Badge variant="outline">{'not ready'}</Badge>
+        )
     }
   },
   {
-    accessorKey: "price",
-    header: "Price",
-  },
-  {
-    accessorKey: "freeshipping",
+    accessorKey: "Free Shipping",
     header: "Free Shipping",
     cell: ({ row }) => (row.original.freeshipping ? "Yes" : "No"),
   },
   {
-    accessorKey: "product_list",
-    header: "Product List",
+    accessorKey: "Produit List",
+    header: () => <span>Produit List</span>,
+    cell: ({ row }) => {
+      const parcel = row.original;
+      const product_list = parcel.product_list;
+      const price = parcel.price;
+
+      return (
+        <div className="flex flex-col">
+          <span className="truncate font-semibold">
+            {product_list}
+          </span>
+          <span className="truncate text-xs">{price} <small>da</small></span>
+        </div>
+      )
+    },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const parcel = row.original;
-      const { showThisParcel, editThisParcel } = useListOrders();
+      const { showThisParcel, editThisParcel, showThisBulkPrint } = useListOrders();
 
-
-      const handleSave = (values) => {
-        //  Here you would make your API call to update the parcel
-        //  For example:
-        //  updateParcel(parcel.id, values)
-        //    .then(() => {
-        //      // Refresh your data or update the row in the table
-        //    })
-        //    .catch(error => {
-        //      console.error("Error updating parcel:", error);
-        //      toast.error("Failed to update parcel.");
-        //    });
-        console.log("Saving:", values); // Placeholder - replace with your API call
+      const handlePrint = (values) => {
+        console.log("Saving:", values);
       };
 
       return (
@@ -135,11 +168,16 @@ export const columns: ColumnDef<Parcel>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(parcel.tracking || "")}
-              >
-                Copy tracking ID
-              </DropdownMenuItem>
+              {parcel?.label
+                && <DropdownMenuItem>
+                  <Link href={parcel.label} target="_blank">Print Parcel</Link>
+                </DropdownMenuItem>
+              }
+              {parcel?.labels
+                && <DropdownMenuItem onClick={() => showThisBulkPrint(parcel)}>
+                  Print (available) Bulk
+                </DropdownMenuItem>
+              }
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => showThisParcel(parcel)}>
                 View parcel details

@@ -81,10 +81,6 @@ export const FilterSection = () => {
           error={null}
         />
         <FilterShownColumnComponent />
-        <Button variant='outline' onClick={handlePrint}>
-          <PrinterIcon />
-          Print Now
-        </Button>
       </div>
     </>
   );
