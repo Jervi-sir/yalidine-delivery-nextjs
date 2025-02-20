@@ -4,14 +4,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Separator } from '@/components/ui/separator';
 import React, { useEffect, useState } from 'react';
 
-export const SelectDropdownComponent = ({ label, placeholder, values, initialValue: initialValueProp = undefined, error, handleOnValueChange, disabled = false }) => {
+export const SelectDropdownComponent = ({ label, placeholder, valueKey = 'id', values, initialValue: initialValueProp = undefined, error, handleOnValueChange, disabled = false }) => {
   const [selectedValue, setSelectedValue] = useState(initialValueProp);
 
   useEffect(() => {
-    if (values.find((v) => v.id === initialValueProp)) {
+    if (values.some((v) => v[valueKey] === initialValueProp)) {
       setSelectedValue(initialValueProp);
     }
-  }, [values, initialValueProp]);
+  }, [values, initialValueProp, valueKey]);
 
   return (
     <div className='flex flex-col'>
@@ -29,7 +29,7 @@ export const SelectDropdownComponent = ({ label, placeholder, values, initialVal
           <SelectContent>
             <SelectGroup>
               {values.map(value => (
-                <SelectItem key={value.id} value={value.id}>
+                <SelectItem key={value[valueKey]} value={value[valueKey]}>
                   {value.name}
                 </SelectItem>
               ))}

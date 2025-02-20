@@ -109,7 +109,7 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
     // the delivery is stopdesk the center should be provided
     if ((data.is_stopdesk === true) && !data.to_center_id) return setError('to_center_id', 'missing Center');
     // the delivery is commune the address should be provided
-    if ((data.is_stopdesk !== true) && !data.address) return setError('address', 'missing Address');
+    if (!data.address) return setError('address', 'missing Address');
     // coli name is provided
     if (variableIsNotValid(data.product_list)) return setError('product_list', 'missing Product Name');
     // includes the price
@@ -146,6 +146,7 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
               title: 'Success',
               description: response.data.message,
             });
+            reset();
             return response.data;
           } catch (error) {
             console.error('Error updating parcel:', error);

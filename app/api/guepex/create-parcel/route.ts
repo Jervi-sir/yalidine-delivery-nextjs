@@ -41,6 +41,10 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
     })
+    // save generated labels url
+    const generatedLabels = response.data[data[0].order_id]?.labels || null;
+    console.log('response 1: ', response.data);
+    console.log('generatedLabels: ', generatedLabels);
     if (response.status < 200 || response.status >= 300) {
       console.error("Guepex API returned an error:", response.status, response.data);
       return NextResponse.json({ details: response.data }, { status: 500 });
@@ -58,6 +62,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
     })
+    console.log('retrievedParcels 1: ', retrievedParcels.data);
     if (retrievedParcels.status < 200 || retrievedParcels.status >= 300) {
       console.error("Guepex API returned an error:", retrievedParcels.status, retrievedParcels.data);
       return NextResponse.json({ details: retrievedParcels.data }, { status: 500 });
@@ -75,7 +80,7 @@ export async function POST(req: Request) {
               tracking: parcelData.tracking,
               import_id: parcelData.import_id,
               label: parcelData.label ? parcelData.label : null,
-              labels: parcelData.labels ? parcelData.labels : null,
+              labels: generatedLabels,
               message: parcelData.message,
               grouped_tracking: trackingArray.join(','),
 

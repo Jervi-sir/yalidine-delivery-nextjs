@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres.fiajqlvacdyoudvadmua:raaahaaan175@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -25,7 +25,7 @@ model User {
 
 model Parcel {
   id               Int     @id @default(autoincrement())
-  user_id          Int? // Foreign key to the User model
+  user_id          Int?     // Foreign key to the User model
   order_id         String? @unique
   from_wilaya_id   Int?
   from_wilaya_name String
@@ -34,7 +34,7 @@ model Parcel {
   contact_phone    String
 
   // location
-  address         String
+  address         String?
   to_commune_id   Int?
   to_commune_name String
   to_wilaya_id    Int?

@@ -49,6 +49,7 @@ export const LivraisonSection = () => {
         handleOnValueChange={(value) => {
           setData('to_commune_id', '');
           setData('to_center_id', '');
+          setData('address', '');
           setCommunes([])
           setCenters([])
           setData('is_stopdesk', value === true);
@@ -81,21 +82,21 @@ export const LivraisonSection = () => {
         error={errors.to_commune_id}
         disabled={data.to_wilaya_name === ''}
       />
-      {data.is_stopdesk ? (
+      {/* {data.is_stopdesk ? ( */}
         <SelectDropdownComponent
           label={doTranslate('Select Center')}
           placeholder={''}
           values={centers}
           initialValue={data.to_center_id}
           handleOnValueChange={(value) => {
-            console.log('value: ', Number(centers.find(c => c.id === value).center_id));
-            setData('to_center_id', Number(centers.find(c => c.id === value).center_id));
+            setData('to_center_id', value);
             setData('to_center_name', centers.find(c => c.id === value).name);
+            setData('address', centers.find(c => c.id === value).name)
           }}
           error={errors.to_center_id}
           disabled={data.to_commune_name === ''}
         />
-      ) : (
+      {/* ) : ( */}
         <>
           <InputComponent
             label={doTranslate('Address')}
@@ -106,7 +107,7 @@ export const LivraisonSection = () => {
             disabled={data.to_wilaya_name === ''}
           />
         </>
-      )}
+      {/* )} */}
     </div>
   );
 };

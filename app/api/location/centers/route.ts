@@ -26,6 +26,19 @@ export async function GET(request: Request) {
     filteredCenters = filteredCenters.filter(center => center.commune_name.toLowerCase() === commune_name.toLowerCase()); // Case-insensitive
   }
 
-  return Response.json([...filteredCenters]); // Return the filtered centers
+  // Format the output
+  const formattedCenters = filteredCenters.map(center => ({
+    id: center.center_id,
+    name: center.name,
+    address: center.address,
+    gps: center.gps,
+    commune_id: center.commune_id,
+    commune_name: center.commune_name,
+    wilaya_id: center.wilaya_id,
+    wilaya_name: center.wilaya_name,
+  }));
+
+
+  return Response.json([...formattedCenters]); // Return the filtered centers
 }
 
