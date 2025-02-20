@@ -5,13 +5,14 @@ import { BadgeCheck, CreditCard, GalleryVerticalEnd, LayoutDashboard, Sparkles }
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
-import { usePathname } from "next/navigation";
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 
@@ -74,8 +75,9 @@ const data = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state } = useSidebar();
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -86,7 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">Livrili</span>
-                  <span className="">v0.0.1</span>
+                  <span className="">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -94,15 +96,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className={state === 'collapsed' && "pl-0"}>
           <SidebarMenu className="gap-2">
             <NavMain items={data} />
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <div className="p-2">
+      <SidebarFooter>
         <NavUser />
-      </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }

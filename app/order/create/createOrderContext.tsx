@@ -35,15 +35,15 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
     setDataJson((prevData) => {
       let parsedValue: FormData[keyof FormData] = value as FormData[keyof FormData]; // Default to the provided value
       // Handle empty string cases based on the field's expected type
-      if (value === '') {
-        if (typeof initialInput[name] === 'number') {
-          parsedValue = undefined as FormData[keyof FormData]; // Or null if appropriate
-        } else if (typeof initialInput[name] === 'boolean') {
-          parsedValue = false as FormData[keyof FormData];
-        } else {
-          parsedValue = '' as FormData[keyof FormData]; // Keep it as an empty string
-        }
-      }
+      // if (value === '') {
+      //   if (typeof initialInput[name] === 'number') {
+      //     parsedValue = undefined as FormData[keyof FormData]; // Or null if appropriate
+      //   } else if (typeof initialInput[name] === 'boolean') {
+      //     parsedValue = false as FormData[keyof FormData];
+      //   } else {
+      //     parsedValue = '' as FormData[keyof FormData]; // Keep it as an empty string
+      //   }
+      // }
       return {
         ...prevData,
         [name]: parsedValue,
@@ -71,12 +71,8 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
 
   // get wilayas and set sender's wilaya
   useEffect(() => {
-    console.log('parcel: ', parcel);
     setWilayas(locallySavedWilaya);
-    if (parcel) {
-
-    }
-    else {
+    if (!parcel) {
       const savedFromWilaya = localStorage.getItem('from_wilaya_id');
       console.log('savedFromWilaya: ', savedFromWilaya);
       if (savedFromWilaya) {
@@ -84,7 +80,7 @@ export function CreateOrderProvider({ children, parcel = null, products = [], on
         setData('from_wilaya_name', locallySavedWilaya.find(w => w.id === parseInt(savedFromWilaya)).name);
       }
     }
-  }, []);
+  }, [parcel]);
 
   const variableIsNotValid = (value) => {
     if (value === undefined) return true;
