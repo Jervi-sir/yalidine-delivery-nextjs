@@ -1,15 +1,35 @@
 'use client'
 
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/provider/language-provider";
 import useHeadbarInsetStore from "@/zustand/headbarInsetStore";
 
 
 export default function Page() {
+  const doTranslate = useTranslation(translations);
   const setHeaderTitles = useHeadbarInsetStore((state: any) => state.setHeaderTitles);
-  setHeaderTitles(['Product', 'Suggest']);
+  setHeaderTitles([doTranslate('Product'), doTranslate('Suggest')]);
   return (
     <div className="flex h-full justify-center items-center ">
-      <Label>Coming soons</Label>
+      <Label>{doTranslate('Coming soons')}</Label>
     </div>
   );
+}
+
+const translations = {
+  "Product": {
+    "English": "Product",
+    "French": "Produit",
+    "Arabic": "المنتج"
+  },
+  "Suggest": {
+    "English": "Suggest",
+    "French": "Suggérer",
+    "Arabic": "اقتراح"
+  },
+  "Coming soons": {
+    "English": "Coming soons",
+    "French": "Bientôt disponible",
+    "Arabic": "قريباً"
+  },
 }

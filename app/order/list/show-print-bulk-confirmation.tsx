@@ -4,18 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "@/provider/language-provider";
 import { Loader2Icon, LoaderIcon } from "lucide-react";
 import * as React from "react";
 
 export function ShowPrintBulkConfirmation({ parcels, open, onOpenChange, handleOnConfirm }) {
+  const doTranslate = useTranslation(translations);
   const [fetching, setFetching] = React.useState(false);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle>Print in bulk</DialogTitle>
+          <DialogTitle>{doTranslate('Print in bulk')}</DialogTitle>
           <DialogDescription>
-            this will be a grouped print for the following tracked parcels
+            {doTranslate('this will be a grouped print for the following tracked parcels')}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -38,22 +40,56 @@ export function ShowPrintBulkConfirmation({ parcels, open, onOpenChange, handleO
           </ScrollArea>
           <div className="grid items-center gap-4">
             <Button disabled={fetching} variant="outline" onClick={() => {
-              if(fetching) return null;
+              if (fetching) return null;
               setFetching(true)
               handleOnConfirm().then(() => setFetching(false));
             }}>
               {fetching && <Loader2Icon className="animate-spin" />}
-              {fetching ? 'Processing...' : 'Print them all'}
+              {fetching ? doTranslate('Processing...') : doTranslate('Print them all')}
             </Button>
           </div>
           {/* Add more fields as needed */}
         </div>
         <DialogFooter>
           <Button type="button" onClick={() => onOpenChange(false)}>
-            Close
+            {doTranslate('Close')}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
+}
+
+const translations = {
+  "Print in bulk": {
+    "English": "Print in bulk",
+    "French": "Imprimer en masse",
+    "Arabic": "الطباعة بالجملة"
+  },
+  "this will be a grouped print for the following tracked ": {
+    "English": "this will be a grouped print for the following tracked ",
+    "French": "ce sera une impression groupée pour les suivis suivants",
+    "Arabic": "ستكون هذه طباعة مجمعة للطرد (الطرود) التي تم تتبعها التالية"
+  },
+  "parcels": {
+    "English": "parcels",
+    "French": "colis",
+    "Arabic": "الطرود"
+  },
+  "Processing...": {
+    "English": "Processing...",
+    "French": "Traitement en cours...",
+    "Arabic": "جاري المعالجة..."
+  },
+  "Print them all": {
+    "English": "Print them all",
+    "French": "Imprimer tout",
+    "Arabic": "اطبعهم كلهم"
+  },
+  "Close": {
+    "English": "Close",
+    "French": "Fermer",
+    "Arabic": "إغلاق"
+  },
+
 }

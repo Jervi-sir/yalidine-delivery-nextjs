@@ -9,6 +9,7 @@ import { FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '@/provider/language-provider';
 
 export default function Form() {
   const router = useRouter();
@@ -17,7 +18,9 @@ export default function Form() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  
+
+  const doTranslate = useTranslation(translations);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -29,8 +32,8 @@ export default function Form() {
       });
       if (!response?.error) {
         toast({
-          title: "Success",
-          description: "Logged In Successfully",
+          title: doTranslate('Success'),
+          description: doTranslate('Logged In Successfully'),
         });
         router.push('/dashboard');
         router.refresh();
@@ -38,8 +41,8 @@ export default function Form() {
     } catch (error) {
       setError(error)
       toast({
-        title: "Error",
-        description: "Error happened.",
+        title: doTranslate('Error'),
+        description: doTranslate('Error happened'),
         variant: "destructive",
       });
     } finally {
@@ -52,13 +55,13 @@ export default function Form() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Email */}
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{doTranslate('Email')}</Label>
           <Input
             id="email"
             type="email"
             name="email"
             value={email}
-            placeholder="email"
+            placeholder={doTranslate('Email')}
             autoComplete="email"
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -68,12 +71,12 @@ export default function Form() {
         {/* Password */}
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{doTranslate('Password')}</Label>
             <a
               href="#"
               className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
             >
-              Forgot your password?
+              {doTranslate('Forgot your password?')}
             </a>
           </div>
           <Input
@@ -81,7 +84,7 @@ export default function Form() {
             type="password"
             name="password"
             value={password}
-            placeholder="password"
+            placeholder={doTranslate('Password')}
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -103,10 +106,59 @@ export default function Form() {
           </label>
         </div> */}
         <Button type="submit" className="w-full items-center" disabled={loading}>
-          <span> {loading ? 'Logging in...' : 'Login'} </span>
+          <span> {loading ? doTranslate('Logging in...') : doTranslate('Login')} </span>
           {loading && <Loader2 className='animate-spin' />}
         </Button>
       </form>
     </AuthLayout>
   );
+}
+
+
+const translations = {
+  "Success": {
+    "English": "Success",
+    "French": "Succès",
+    "Arabic": "نجاح"
+  },
+  "Error": {
+    "English": "Error",
+    "French": "Erreur",
+    "Arabic": "خطأ"
+  },
+  "Logged In Successfully": {
+    "English": "Logged In Successfully",
+    "French": "Connecté avec succès",
+    "Arabic": "تم تسجيل الدخول بنجاح"
+  },
+  "Error happened": {
+    "English": "Error happened",
+    "French": "Une erreur est survenue",
+    "Arabic": "حدث خطأ"
+  },
+  "Email": {
+    "English": "Email",
+    "French": "Email/Courriel",
+    "Arabic": "البريد الإلكتروني"
+  },
+  "Password": {
+    "English": "Password",
+    "French": "Mot de passe",
+    "Arabic": "كلمة المرور"
+  },
+  "Forgot your password?": {
+    "English": "Forgot your password?",
+    "French": "Mot de passe oublié ?",
+    "Arabic": "نسيت كلمة المرور؟"
+  },
+  "Logging in...": {
+    "English": "Logging in...",
+    "French": "Connexion en cours...",
+    "Arabic": "جاري تسجيل الدخول..."
+  },
+  "Login": {
+    "English": "Login",
+    "French": "Se connecter/Connexion",
+    "Arabic": "تسجيل الدخول"
+  }
 }

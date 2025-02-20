@@ -12,9 +12,11 @@ import {
 import { ChartContainer } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import prisma from "@/prisma/prisma";
+import { useTranslation } from "@/provider/language-provider";
 
 export default function AverageParcelPriceCard() {
   const [averagePrice, setAveragePrice] = useState(0);
+  const doTranslate = useTranslation(translations);
 
   useEffect(() => {
     // async function fetchAveragePrice() {
@@ -41,15 +43,15 @@ export default function AverageParcelPriceCard() {
   return (
     <Card className="h-full">
       <CardHeader className="p-4 pb-0">
-        <CardTitle>Average Parcel Price</CardTitle>
+        <CardTitle>{doTranslate('Average Parcel Price')}</CardTitle>
         <CardDescription>
-          Average price of your parcels over all time.
+          {doTranslate('Average price of your parcels over all time.')}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
         <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-          {averagePrice.toFixed(2)} 
-          <small>DA</small>
+          {averagePrice.toFixed(2)}
+          <small>{doTranslate('DA')}</small>
         </div>
         <ChartContainer
           config={{
@@ -119,4 +121,24 @@ export default function AverageParcelPriceCard() {
       </CardContent>
     </Card>
   );
+}
+
+
+const translations = {
+  "Average Parcel Price": {
+    "English": "Average Parcel Price",
+    "French": "Prix moyen des colis",
+    "Arabic": "متوسط سعر الطرود"
+  },
+  "Average price of your parcels over all time.": {
+    "English": "Average price of your parcels over all time.",
+    "French": "Prix moyen de vos colis sur toute la durée.",
+    "Arabic": "متوسط سعر الطرود الخاصة بك على مر الزمن."
+  },
+  "DA": {
+    "English": "DA",
+    "French": "DA",
+    "Arabic": "دج"
+  },
+
 }

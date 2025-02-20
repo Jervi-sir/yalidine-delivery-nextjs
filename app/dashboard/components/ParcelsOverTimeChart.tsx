@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import prisma from "@/prisma/prisma";
+import { useTranslation } from "@/provider/language-provider";
 
 const chartConfig = {
   parcels: {
@@ -27,7 +28,7 @@ const chartConfig = {
 
 export function ParcelsOverTimeChart() {
   const [chartData, setChartData] = useState([]);
-
+  const doTranslate = useTranslation(translations);
   useEffect(() => {
     // async function fetchChartData() {
     //   const currentUserId = 1; // Replace with your actual user ID
@@ -64,9 +65,9 @@ export function ParcelsOverTimeChart() {
     <Card className="h-full">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Parcels Over Time</CardTitle>
+          <CardTitle>{doTranslate('Parcels Over Time')}</CardTitle>
           <CardDescription>
-            Number of parcels created over time
+            {doTranslate('Number of parcels created over time')}
           </CardDescription>
         </div>
       </CardHeader>
@@ -119,4 +120,18 @@ export function ParcelsOverTimeChart() {
       </CardContent>
     </Card>
   );
+}
+
+const translations = {
+  "Parcels Over Time": {
+    "English": "Parcels Over Time",
+    "French": "Colis au fil du temps",
+    "Arabic": "الطرود بمرور الوقت"
+  },
+  "Number of parcels created over time": {
+    "English": "Number of parcels created over time",
+    "French": "Nombre de colis créés au fil du temps",
+    "Arabic": "عدد الطرود التي تم إنشاؤها بمرور الوقت"
+  },
+
 }

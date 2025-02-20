@@ -6,17 +6,17 @@ import { useCreateOrder } from '../createOrderContext';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import InputError from '@/components/ui/input-error';
+import { useTranslation } from '@/provider/language-provider';
 
 export const LivraisonSection = () => {
-  const {
-    wilayas, errors, data, setData, parcel
-  } = useCreateOrder();
+  const doTranslate = useTranslation(translations);
+  const { wilayas, errors, data, setData, parcel } = useCreateOrder();
   const [communes, setCommunes] = useState([]);
   const [centers, setCenters] = useState([]);
 
   // get communes
   useEffect(() => {
-    if(!parcel) setData('to_commune_id', '');
+    if (!parcel) setData('to_commune_id', '');
     if (data.to_wilaya_id === '') return undefined;
     setCommunes([])
     axios.get('/api/location/communes', {
@@ -29,7 +29,7 @@ export const LivraisonSection = () => {
   // get communes
   useEffect(() => {
     if (data.to_commune_id === '') return undefined;
-    if(!parcel) setData('to_center_id', '');
+    if (!parcel) setData('to_center_id', '');
     setCenters([])
     axios.get('/api/location/centers', {
       params: { wilaya_id: data.to_wilaya_id, commune_id: data.to_commune_id }
@@ -40,9 +40,9 @@ export const LivraisonSection = () => {
 
   return (
     <div className='space-y-2'>
-      <Label>Livraison</Label>
+      <Label>{doTranslate('Livraison')}</Label>
       <SelectDropdownComponent
-        label={'Delivery Type'}
+        label={doTranslate('Delivery Type')}
         placeholder={''}
         initialValue={data.is_stopdesk}
         values={[{ id: false, name: 'Commune' }, { id: true, name: 'Stopdesk' }]}
@@ -58,7 +58,7 @@ export const LivraisonSection = () => {
       <InputError message={errors.is_stopdesk} className="ml-auto mr-2" />
       {/* To Wilaya */}
       <SelectDropdownComponent
-        label={'To Wilaya'}
+        label={doTranslate('To Wilaya')}
         placeholder={''}
         values={wilayas}
         initialValue={data.to_wilaya_id}
@@ -70,7 +70,7 @@ export const LivraisonSection = () => {
         disabled={data.is_stopdesk === null}
       />
       <SelectDropdownComponent
-        label={'Select Commune'}
+        label={doTranslate('Select Commune')}
         placeholder={''}
         values={communes}
         initialValue={data.to_commune_id}
@@ -83,7 +83,7 @@ export const LivraisonSection = () => {
       />
       {data.is_stopdesk ? (
         <SelectDropdownComponent
-          label={'Select Center'}
+          label={doTranslate('Select Center')}
           placeholder={''}
           values={centers}
           initialValue={data.to_center_id}
@@ -98,7 +98,7 @@ export const LivraisonSection = () => {
       ) : (
         <>
           <InputComponent
-            label={'Address'}
+            label={doTranslate('Address')}
             placeholder={''}
             value={data.address}
             handleOnChange={(e) => setData('address', e.target.value)}
@@ -110,3 +110,37 @@ export const LivraisonSection = () => {
     </div>
   );
 };
+
+const translations = {
+  "Livraison": {
+    "English": "Delivery",
+    "French": "Livraison",
+    "Arabic": "التوصيل"
+  },
+  "Delivery Type": {
+    "English": "Delivery Type",
+    "French": "Type de livraison",
+    "Arabic": "نوع التوصيل"
+  },
+  "To Wilaya": {
+    "English": "To Wilaya",
+    "French": "Vers Wilaya",
+    "Arabic": "إلى ولاية"
+  },
+  "Select Commune": {
+    "English": "Select Commune",
+    "French": "Sélectionner la commune",
+    "Arabic": "اختر بلدية"
+  },
+  "Select Center": {
+    "English": "Select Center",
+    "French": "Sélectionner le centre",
+    "Arabic": "اختر مركزاً"
+  },
+  "Address": {
+    "English": "Address",
+    "French": "Adresse",
+    "Arabic": "العنوان"
+  },
+
+}

@@ -1,30 +1,31 @@
+'use client';
 import { Label } from '@/components/ui/label';
 import { InputComponent } from '../components/InputComponent';
 import { useCreateOrder } from '../createOrderContext';
+import { useTranslation } from '@/provider/language-provider';
 
 export const DestinataireSection = () => {
-  const {
-    errors, data, setData
-  } = useCreateOrder()
+  const doTranslate = useTranslation(translations);
+  const { errors, data, setData } = useCreateOrder()
   return (
     <div className='space-y-2'>
-      <Label>Destinataire</Label>
+      <Label>{doTranslate('Destinataire')}</Label>
       <InputComponent
-        label={'Nom'}
+        label={doTranslate('Nom')}
         placeholder={''}
         value={data.familyName}
         handleOnChange={(e) => setData('familyName', e.target.value)}
         error={errors.familyName}
       />
       <InputComponent
-        label={'Prénom'}
+        label={doTranslate('Prénom')}
         placeholder={''}
         value={data.firstName}
         handleOnChange={(e) => setData('firstName', e.target.value)}
         error={errors.firstName}
       />
       <InputComponent
-        label={'Téléphone'}
+        label={doTranslate('Téléphone')}
         placeholder={''}
         value={data.contactPhone}
         handleOnChange={(e) => setData('contactPhone', e.target.value)}
@@ -33,3 +34,26 @@ export const DestinataireSection = () => {
     </div>
   );
 };
+
+const translations = {
+  "Destinataire": {
+    "English": "Recipient",
+    "French": "Destinataire",
+    "Arabic": "المستلم"
+  },
+  "Nom": {
+    "English": "Last Name",
+    "French": "Nom",
+    "Arabic": "الاسم"
+  },
+  "Prénom": {
+    "English": "First Name",
+    "French": "Prénom",
+    "Arabic": "الاسم الأول"
+  },
+  "Téléphone": {
+    "English": "Phone number",
+    "French": "Téléphone",
+    "Arabic": "رقم الهاتف"
+  },
+}

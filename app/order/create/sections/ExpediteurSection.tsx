@@ -1,17 +1,17 @@
 import { Label } from '@/components/ui/label';
 import { SelectDropdownComponent } from '../components/SelectDropdownComponent';
 import { useCreateOrder } from '../createOrderContext';
+import { useTranslation } from '@/provider/language-provider';
 
 export const ExpediteurSection = () => {
-  const {
-    wilayas, data, setData
-  } = useCreateOrder()
+  const doTranslate = useTranslation(translations);
+  const { wilayas, data, setData } = useCreateOrder()
   return (
     <div className='space-y-2'>
-      <Label >Expéditeur</Label>
+      <Label >{doTranslate('Expéditeur')}</Label>
       <SelectDropdownComponent
-        label={'Wilaya de départ'}
-        placeholder={'Enter from wilaya name'}
+        label={doTranslate('Wilaya de départ')}
+        placeholder={doTranslate('Enter from wilaya name')}
         values={wilayas}
         initialValue={data.from_wilaya_id} // Set initial value from localStorage
         error={null}
@@ -24,3 +24,21 @@ export const ExpediteurSection = () => {
     </div>
   );
 };
+
+const translations = {
+  "Expéditeur": {
+    "English": "Sender",
+    "French": "Expéditeur",
+    "Arabic": "المرسل"
+  },
+  "Wilaya de départ": {
+    "English": "Departure Wilaya",
+    "French": "Wilaya de départ",
+    "Arabic": "ولاية المغادرة"
+  },
+  "Enter from wilaya name": {
+    "English": "Enter from wilaya name",
+    "French": "Entrez le nom de la wilaya de départ",
+    "Arabic": "أدخل اسم الولاية"
+  },
+}

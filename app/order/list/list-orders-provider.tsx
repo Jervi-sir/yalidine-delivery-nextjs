@@ -131,7 +131,6 @@ export function ListOrdersProvider({ children, products = [] }) {
   const [showEditParcelDialog, setShowEditParcelDialog] = useState(false);
   const [selectedParcelToEdit, setSelectedParcelToEdit] = useState(undefined);
   const editThisParcel = (parcel) => {
-    console.log('parcel: ', parcel);
     setShowEditParcelDialog(true);
     setSelectedParcelToEdit(parcel)
   }
@@ -143,7 +142,6 @@ export function ListOrdersProvider({ children, products = [] }) {
   }
 
   const handleUpdateParcel = async (updatedParcel: any) => {
-    console.log('handleOnUpdateParcel: ', updatedParcel);
     setData((prevData) =>
       prevData.map((parcel) =>
         parcel.id === updatedParcel.id ? { ...parcel, ...updatedParcel } : parcel,

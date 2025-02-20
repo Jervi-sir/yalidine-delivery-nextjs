@@ -5,6 +5,7 @@ import { ThemeToggle } from "../theme-toggle";
 import { Fragment } from "react";
 import useHeadbarInsetStore from "@/zustand/headbarInsetStore";
 import { Skeleton } from "../ui/skeleton";
+import { LanguageSelector } from "../language-selector";
 
 export function AppHeader() {
   const headerTitles = useHeadbarInsetStore((state: any) => state.headerTitles);
@@ -35,7 +36,10 @@ export function AppHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <ThemeToggle />
+      <div className="flex gap-2">
+        <LanguageSelector />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

@@ -11,6 +11,7 @@ import { CreateOrderProvider, useCreateOrder } from "../create/createOrderContex
 import { ColiSection } from "../create/sections/ColiSection";
 import { WeightSection } from "../create/sections/WeightSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useTranslation } from "@/provider/language-provider";
 
 export function EditParcelDialog({ parcel, open, onOpenChange, handleOnUpdateParcel }) {
   return (
@@ -22,11 +23,9 @@ export function EditParcelDialog({ parcel, open, onOpenChange, handleOnUpdatePar
   );
 }
 
-
 const FormBody = ({ parcel, onOpenChange, handleOnUpdateParcel }) => {
-  const {
-    handleSubmit, processing
-  } = useCreateOrder();
+  const doTranslate = useTranslation(translations);
+  const { handleSubmit, processing } = useCreateOrder();
   return (
     <>
       <DialogContent className="sm:max-w-[525px]">
@@ -51,22 +50,41 @@ const FormBody = ({ parcel, onOpenChange, handleOnUpdateParcel }) => {
           <Separator className='my-4' />
         </ScrollArea>
         <DialogFooter>
-          <Button 
-            className="w-full" 
-            onClick={async (e) => { 
+          <Button
+            className="w-full"
+            onClick={async (e) => {
               const updatedParcel = await handleSubmit(e);
               handleOnUpdateParcel(updatedParcel);
               onOpenChange(false);
-            }} 
+            }}
             disabled={processing}
           >
-            {processing ? 'Updating...' : 'Submit an Update'}
+            {processing ? doTranslate('Updating...') : doTranslate('Submit an Update')}
           </Button>
           <Button type="button" onClick={() => onOpenChange(false)}>
-            Close
+            {doTranslate('Close')}
           </Button>
         </DialogFooter>
       </DialogContent>
     </>
   )
+}
+
+const translations = {
+  "Updating...": {
+    "English": "Updating...",
+    "French": "Mise à jour en cours...",
+    "Arabic": "جاري التحديث..."
+  },
+  "Submit an Update": {
+    "English": "Submit an Update",
+    "French": "Soumettre une mise à jour",
+    "Arabic": "إرسال تحديث"
+  },
+  "Close": {
+    "English": "Close",
+    "French": "Fermer",
+    "Arabic": "إغلاق"
+  },
+
 }

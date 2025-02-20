@@ -1,8 +1,12 @@
+'use client'
+
 import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/provider/language-provider';
 import { GalleryVerticalEnd } from 'lucide-react';
 import React from 'react';
 
 export const AuthLayout = ({ children, isLogin = false }) => {
+  const doTranslate = useTranslation(translations);
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
       <div className="w-full max-w-sm flex flex-col gap-6">
@@ -15,30 +19,30 @@ export const AuthLayout = ({ children, isLogin = false }) => {
               <div className="flex h-8 w-8 items-center justify-center rounded-md">
                 <GalleryVerticalEnd className="size-6" />
               </div>
-              <span className="sr-only">Acme Inc.</span>
+              <span className="sr-only">{process.env.NEXT_PUBLIC_BRAND}</span>
             </a>
-            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
-            { isLogin
-                ? <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <a href={'/auth/register'} className="underline underline-offset-4">
-                    Register
-                  </a>
-                </div>
-                :
-                <div className="text-center text-sm">
-                  Already have an account?{" "}
-                  <a href={'/auth/login'} className="underline underline-offset-4">
-                    Login
-                  </a>
-                </div>
+            <h1 className="text-xl font-bold">{doTranslate('Welcome to')} {process.env.NEXT_PUBLIC_BRAND}</h1>
+            {isLogin
+              ? <div className="text-center text-sm">
+                {doTranslate('Don t have an account ? ')}{" "}
+                <a href={'/auth/register'} className="underline underline-offset-4" >
+                  {doTranslate('Register')}
+                </a>
+              </div>
+              :
+              <div className="text-center text-sm">
+                {doTranslate('Already have an account?')}{" "}
+                <a href={'/auth/login'} className="underline underline-offset-4">
+                  {doTranslate('Login')}
+                </a>
+              </div>
             }
 
           </div>
           {children}
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
-              Or
+              {doTranslate('Or')}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-1">
@@ -49,16 +53,79 @@ export const AuthLayout = ({ children, isLogin = false }) => {
                   fill="currentColor"
                 />
               </svg>
-              Continue with Google (Coming Soon)
+              {doTranslate('Continue with Google')} ({doTranslate('Coming Soon')})
             </Button>
           </div>
         </div>
 
         <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary  ">
-          By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-          and <a href="#">Privacy Policy</a>.
+          {doTranslate('By clicking continue, you agree to our')} <a href="#">{doTranslate('Terms of Service')}</a>{" "}
+          {doTranslate('and')} <a href="#">{doTranslate('Privacy Policy')}</a>.
         </div>
       </div>
-    </div>
+    </div >
   );
 };
+
+const translations = {
+  "Welcome to": {
+    "English": "Welcome to",
+    "French": "Bienvenue sur",
+    "Arabic": "مرحباً بك في"
+  },
+  "Don t have an account?": {
+    "English": "Don't have an account?",
+    "French": "Vous n'avez pas de compte ?",
+    "Arabic": "ليس لديك حساب؟"
+  },
+  "Register": {
+    "English": "Register",
+    "French": "S'inscrire/Enregistrer",
+    "Arabic": "تسجيل"
+  },
+  "Already have an account": {
+    "English": "Already have an account",
+    "French": "Vous avez déjà un compte",
+    "Arabic": "لديك حساب بالفعل"
+  },
+  "Login": {
+    "English": "Login",
+    "French": "Se connecter/Connexion",
+    "Arabic": "تسجيل الدخول"
+  },
+  "Or": {
+    "English": "Or",
+    "French": "Ou",
+    "Arabic": "أو"
+  },
+  "Continue with Google": {
+    "English": "Continue with Google",
+    "French": "Continuer avec Google",
+    "Arabic": "المتابعة مع جوجل"
+  },
+  "Coming Soon": {
+    "English": "Coming Soon",
+    "French": "Bientôt disponible",
+    "Arabic": "قريباً"
+  },
+  "By clicking continue, you agree to our": {
+    "English": "By clicking continue, you agree to our",
+    "French": "En cliquant sur continuer, vous acceptez nos",
+    "Arabic": "بالنقر فوق متابعة ، فإنك توافق على"
+  },
+  "Terms of Service": {
+    "English": "Terms of Service",
+    "French": "Conditions d'utilisation",
+    "Arabic": "شروط الخدمة"
+  },
+  "and": {
+    "English": "and",
+    "French": "et",
+    "Arabic": "و"
+  },
+  "Privacy Policy": {
+    "English": "Privacy Policy",
+    "French": "Politique de confidentialité",
+    "Arabic": "سياسة الخصوصية"
+  }
+}

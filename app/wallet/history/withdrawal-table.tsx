@@ -13,10 +13,11 @@ import { useListWithdrawals } from "./list-withdrawals-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { columns } from "./withdrawal-columns";
 import { PaginationWrapper } from "@/app/order/list/components/PaginationWrapper";
+import { useTranslation } from "@/provider/language-provider";
 
 export function WithdrawalTable() {
-  const { table, isLoadingData, setCurrentPage, currentPage, totalPages } =
-    useListWithdrawals();
+  const doTranslate = useTranslation(translations);
+  const { table, isLoadingData, setCurrentPage, currentPage, totalPages } = useListWithdrawals();
 
   return (
     <div className="">
@@ -31,9 +32,9 @@ export function WithdrawalTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -43,43 +44,43 @@ export function WithdrawalTable() {
           <TableBody>
             {isLoadingData
               ? Array(7)
-                  .fill(null)
-                  .map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-12 text-center"
-                      >
-                        <Skeleton className="h-full w-full" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-              : table.getRowModel().rows?.length > 0 ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
+                .fill(null)
+                .map((_, index) => (
+                  <TableRow key={index}>
                     <TableCell
                       colSpan={columns.length}
-                      className="h-24 text-center"
+                      className="h-12 text-center"
                     >
-                      No results.
+                      <Skeleton className="h-full w-full" />
                     </TableCell>
                   </TableRow>
-                )}
+                ))
+              : table.getRowModel().rows?.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    {doTranslate('No results.')}
+                  </TableCell>
+                </TableRow>
+              )}
           </TableBody>
         </Table>
       </div>
@@ -90,4 +91,13 @@ export function WithdrawalTable() {
       />
     </div>
   );
+}
+
+
+const translations = {
+  "No results.": {
+    "English": "No results.",
+    "French": "Aucun résultat.",
+    "Arabic": "لا نتائج."
+  },
 }

@@ -7,13 +7,14 @@ import { FilterSection } from "./filter-section";
 import { columns } from "./columns";
 import { PaginationWrapper } from "./components/PaginationWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "@/provider/language-provider";
 
 export function OrderTable() {
+  const doTranslate = useTranslation(translations);
   const {
     table, perPage,
     isLoadingData, setCurrentPage, currentPage, totalPages
   } = useListOrders();
-
   return (
     <div className="">
       {/* Filtering Inputs */}
@@ -70,7 +71,7 @@ export function OrderTable() {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {doTranslate('No results.')}
                     </TableCell>
                   </TableRow>
                 )
@@ -86,4 +87,13 @@ export function OrderTable() {
       />
     </div>
   );
+}
+
+const translations = {
+  "No results.": {
+    "English": "No results.",
+    "French": "Aucun résultat.",
+    "Arabic": "لا نتائج."
+  },
+
 }

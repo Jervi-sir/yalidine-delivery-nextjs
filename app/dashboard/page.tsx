@@ -6,10 +6,12 @@ import { ParcelsOverTimeChart } from "./components/ParcelsOverTimeChart";
 import ParcelStatusChart from "./components/ParcelStatusChart";
 import AverageParcelPriceCard from "./components/AverageParcelPriceCard";
 import ParcelsDeliveredCard from "./components/ParcelsDeliveredCard";
+import { useTranslation } from "@/provider/language-provider";
 
 export default function Page() {
   const setHeaderTitles = useHeadbarInsetStore((state: any) => state.setHeaderTitles);
-  setHeaderTitles(['Dashboard']);
+  const doTranslate = useTranslation(translations);
+  setHeaderTitles([doTranslate('Dashboard')]);
 
   return (
     <div className="flex flex-1 flex-col gap-4 pt-0">
@@ -29,4 +31,12 @@ export default function Page() {
       </div>
     </div>
   )
+}
+
+const translations = {
+  "Dashboard": {
+    "English": "Dashboard",
+    "French": "Tableau de bord",
+    "Arabic": "لوحة التحكم"
+  }
 }

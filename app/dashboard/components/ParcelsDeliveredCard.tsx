@@ -11,11 +11,12 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import prisma from "@/prisma/prisma";
+import { useTranslation } from "@/provider/language-provider";
 import { useEffect, useState } from "react";
 
 export default function ParcelsDeliveredCard() {
   const [parcelsDelivered, setParcelsDelivered] = useState(0);
-
+  const doTranslate = useTranslation(translations);
   useEffect(() => {
     // async function fetchParcelsDelivered() {
     //   const currentUserId = 1; // Replace with your actual user ID
@@ -42,13 +43,13 @@ export default function ParcelsDeliveredCard() {
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
-        <CardDescription>This Week</CardDescription>
+        <CardDescription>{doTranslate('This Week')}</CardDescription>
         {/* <CardTitle className="text-4xl">{parcelsDelivered}</CardTitle> */}
       </CardHeader>
       <CardContent>
         <div className="text-xs text-muted-foreground">
           {/* +25% from last week (replace with actual data) */}
-          No data available
+          {doTranslate('No data available')}
         </div>
       </CardContent>
       <CardFooter>
@@ -56,4 +57,18 @@ export default function ParcelsDeliveredCard() {
       </CardFooter>
     </Card>
   );
+}
+
+const translations = {
+  "This Week": {
+    "English": "This Week",
+    "French": "Cette semaine",
+    "Arabic": "هذا الأسبوع"
+  },
+  "No data available": {
+    "English": "No data available",
+    "French": "Aucune donnée disponible",
+    "Arabic": "لا توجد بيانات متاحة"
+  },
+
 }

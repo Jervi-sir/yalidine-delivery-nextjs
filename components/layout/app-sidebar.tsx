@@ -15,67 +15,68 @@ import {
 } from "@/components/ui/sidebar"
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
-
-// This is sample data.
-const data = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-    isActive: true,
-  },
-  {
-    title: "Orders",
-    icon: Sparkles,
-    isActive: true,
-    items: [
-      {
-        title: "Create",
-        url: "/order/create",
-      },
-      {
-        title: "List",
-        url: "/order/list",
-      },
-    ],
-  },
-  {
-    title: "Wallet",
-    icon: CreditCard,
-    isActive: true,
-    items: [
-      {
-        title: "Request Withdraw",
-        url: "/wallet/withdraw",
-      },
-      {
-        title: "History",
-        url: "/wallet/history",
-      },
-    ],
-  },
-  {
-    title: "Products",
-    icon: BadgeCheck,
-    items: [
-      {
-        title: "Create",
-        url: "/product/create",
-      },
-      {
-        title: "List",
-        url: "/product/list",
-      },
-      {
-        title: "Suggest",
-        url: "/product/suggest",
-      },
-    ],
-  },
-];
+import { useTranslation } from "@/provider/language-provider";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
+  const doTranslate = useTranslation(translations);
+  const data = [
+    {
+      title: doTranslate('Dashboard'),
+      url: "/dashboard",
+      icon: LayoutDashboard,
+      isActive: true,
+    },
+    {
+      title: doTranslate('Orders'),
+      icon: Sparkles,
+      isActive: true,
+      items: [
+        {
+          title: doTranslate('Create'),
+          url: "/order/create",
+        },
+        {
+          title: doTranslate('List'),
+          url: "/order/list",
+        },
+      ],
+    },
+    {
+      title: doTranslate('Wallet'),
+      icon: CreditCard,
+      isActive: true,
+      items: [
+        {
+          title: doTranslate('Request Withdraw'),
+          url: "/wallet/withdraw",
+        },
+        {
+          title: doTranslate('History'),
+          url: "/wallet/history",
+        },
+      ],
+    },
+    {
+      title: doTranslate('Products'),
+      icon: BadgeCheck,
+      items: [
+        {
+          title: doTranslate('Create'),
+          url: "/product/create",
+        },
+        {
+          title: doTranslate('List'),
+          url: "/product/list",
+        },
+        {
+          title: doTranslate('Suggest'),
+          url: "/product/suggest",
+        },
+      ],
+    },
+  ];
+
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
@@ -107,4 +108,52 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
     </Sidebar>
   )
+}
+
+const translations = {
+  "Dashboard": {
+    "English": "Dashboard",
+    "French": "Tableau de bord",
+    "Arabic": "لوحة التحكم"
+  },
+  "Orders": {
+    "English": "Orders",
+    "French": "Commandes",
+    "Arabic": "الطلبات"
+  },
+  "Create": {
+    "English": "Create",
+    "French": "Créer",
+    "Arabic": "إنشاء"
+  },
+  "List": {
+    "English": "List",
+    "French": "Liste",
+    "Arabic": "قائمة"
+  },
+  "Wallet": {
+    "English": "Wallet",
+    "French": "Portefeuille",
+    "Arabic": "محفظة"
+  },
+  "Request Withdraw": {
+    "English": "Request Withdraw",
+    "French": "Demande de retrait",
+    "Arabic": "طلب سحب"
+  },
+  "History": {
+    "English": "History",
+    "French": "Historique",
+    "Arabic": "سجل"
+  },
+  "Products": {
+    "English": "Products",
+    "French": "Produits",
+    "Arabic": "المنتجات"
+  },
+  "Suggest": {
+    "English": "Suggest",
+    "French": "Suggérer",
+    "Arabic": "اقتراح"
+  }
 }

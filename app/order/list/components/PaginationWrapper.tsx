@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useTranslation } from "@/provider/language-provider";
 
 interface PaginationProps {
   currentPage: number;
@@ -24,6 +25,7 @@ export function PaginationWrapper({
   setCurrentPage,
 }: PaginationProps) {
   const maxButtons = 5;
+  const doTranslate = useTranslation(translations);
 
   const getPageButtons = () => {
     const buttons: (number | null)[] = [];
@@ -76,7 +78,7 @@ export function PaginationWrapper({
     <div className="flex items-center justify-center space-x-2 py-4 gap-4">
       <div className="px-2">
         <Label className="text-nowrap">
-          Page {currentPage} of {totalPages}
+          {doTranslate('Page')} {currentPage} {doTranslate('of')} {totalPages}
         </Label>
       </div>
       <Pagination className="justify-end">
@@ -141,4 +143,18 @@ export function PaginationWrapper({
 
     </div>
   );
+}
+
+
+const translations = {
+  "Page": {
+    "English": "Page",
+    "French": "Page",
+    "Arabic": "صفحة"
+  },
+  "of": {
+    "English": "of",
+    "French": "de",
+    "Arabic": "من"
+  },
 }

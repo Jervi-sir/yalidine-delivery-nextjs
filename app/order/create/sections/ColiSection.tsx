@@ -1,15 +1,17 @@
+'use client';
+
 import { Label } from '@/components/ui/label';
 import { InputComponent } from '../components/InputComponent';
 import { CheckboxComponent } from '../components/CheckboxComponent';
 import { useCreateOrder } from '../createOrderContext';
+import { useTranslation } from '@/provider/language-provider';
 
 export const ColiSection = () => {
-  const {
-    errors, data, setData,
-  } = useCreateOrder()
+  const doTranslate = useTranslation(translations);
+  const { errors, data, setData, } = useCreateOrder();
   return (
     <div className='space-y-2'>
-      <Label>Le colis</Label>
+      <Label>{doTranslate('Le colis')}</Label>
       {/* <SelectDropdownComponent
         label={'Select Product'}
         placeholder={'Choose product'}
@@ -19,7 +21,7 @@ export const ColiSection = () => {
         error={null}
       /> */}
       <InputComponent
-        label={'Product Name'}
+        label={doTranslate('Product Name')}
         placeholder={''}
         value={data.product_list}
         handleOnChange={(e) => setData('product_list', e.target.value)}
@@ -27,7 +29,7 @@ export const ColiSection = () => {
       />
       {/* Price */}
       <InputComponent
-        label={'Prix'}
+        label={doTranslate('Prix')}
         placeholder={''}
         value={data.price}
         handleOnChange={(e) => setData('price', e.target.value)}
@@ -37,7 +39,7 @@ export const ColiSection = () => {
       />
       {/* Free Delivery */}
       <CheckboxComponent
-        label={'Livraison gratuite?'}
+        label={doTranslate('Livraison gratuite?')}
         onChange={(checked) => setData('freeshipping', checked)}
         checked={data.freeshipping}
         error={null}
@@ -45,3 +47,26 @@ export const ColiSection = () => {
     </div>
   );
 };
+
+const translations = {
+  "Le colis": {
+    "English": "The parcel",
+    "French": "Le colis",
+    "Arabic": "الطرد"
+  },
+  "Product Name": {
+    "English": "Product Name",
+    "French": "Nom du produit",
+    "Arabic": "اسم المنتج"
+  },
+  "Prix": {
+    "English": "Price",
+    "French": "Prix",
+    "Arabic": "السعر"
+  },
+  "Livraison gratuite?": {
+    "English": "Free delivery?",
+    "French": "Livraison gratuite ?",
+    "Arabic": "توصيل مجاني؟"
+  },
+}

@@ -6,10 +6,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import prisma from "@/prisma/prisma";
+import { useTranslation } from "@/provider/language-provider";
 
 export default function ParcelStatusChart() {
   const [parcelStatusData, setParcelStatusData] = useState([]);
-
+  const doTranslate = useTranslation(translations);
   useEffect(() => {
     // async function fetchParcelStatusData() {
     //   const currentUserId = 1; // Replace with your actual user ID
@@ -87,4 +88,8 @@ export default function ParcelStatusChart() {
       </CardContent>
     </Card>
   );
+}
+
+const translations = {
+
 }

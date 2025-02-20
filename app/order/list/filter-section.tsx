@@ -7,13 +7,15 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown, PrinterIcon } from 'lucide-react';
 import axios from 'axios';
+import { useTranslation } from '@/provider/language-provider';
 
 export const FilterSection = () => {
+  const doTranslate = useTranslation(translations);
   const {
-    wilayaFilter, setWilayaFilter, 
-    communeFilter, setCommuneFilter, 
-    isStopdeskFilter, setIsStopdeskFilter, 
-    statusFilter, setStatusFilter, 
+    wilayaFilter, setWilayaFilter,
+    communeFilter, setCommuneFilter,
+    isStopdeskFilter, setIsStopdeskFilter,
+    statusFilter, setStatusFilter,
     doInsuranceFilter, setDoInsuranceFilter,
     handlePrint
   } = useListOrders();
@@ -31,16 +33,16 @@ export const FilterSection = () => {
     }).then(response => {
       setCommunes(response.data);
     });
-  }, [wilayaId, isStopdeskFilter]) 
+  }, [wilayaId, isStopdeskFilter])
 
   return (
     <>
       <div className="flex flex-wrap items-center gap-2 py-4">
         <SelectDropdownComponent
-          placeholder={'Filter by Wilayas'}
-          values={[{ id: 0, name: 'all'}, ...wilayas]}
+          placeholder={doTranslate('Filter by Wilayas')}
+          values={[{ id: 0, name: doTranslate('all') }, ...wilayas]}
           handleOnValueChange={(e) => {
-            if(e.id === 0) {
+            if (e.id === 0) {
               setWilayaFilter(undefined)
               setWilayaId(undefined)
             } else {
@@ -52,10 +54,10 @@ export const FilterSection = () => {
           error={null}
         />
         <SelectDropdownComponent
-          placeholder={'Filter by Commune'}
-          values={[{ id: 0, name: 'all', value: 'all'}, ...communes]}
+          placeholder={doTranslate('Filter by Commune')}
+          values={[{ id: 0, name: doTranslate('all'), value: 'all' }, ...communes]}
           handleOnValueChange={(e) => {
-            if(e.id === 0) {
+            if (e.id === 0) {
               setCommuneFilter(undefined)
             } else {
               setCommuneFilter(e.name)
@@ -64,21 +66,21 @@ export const FilterSection = () => {
           error={null}
         />
         <SelectDropdownComponent
-          placeholder={'Stop Desk'}
-          values={[{ id: 0, name: 'all', value: undefined}, { id: 1, name: 'Commune', value: false }, { id: 2, name: 'Stopdesk', value: true }]}
+          placeholder={doTranslate('Stop Desk')}
+          values={[{ id: 0, name: doTranslate('all'), value: undefined }, { id: 1, name: doTranslate('Commune'), value: false }, { id: 2, name: doTranslate('Stopdesk'), value: true }]}
           handleOnValueChange={(e) => setIsStopdeskFilter(e.value)}
           error={null}
         />
         <SelectDropdownComponent
-          placeholder={'Filter by Status'}
-          values={[{ id: 0, name: 'coming soon', value: undefined}]}
-          handleOnValueChange={(e) => {}}
+          placeholder={doTranslate('Filter by Status')}
+          values={[{ id: 0, name: doTranslate('coming soon'), value: undefined }]}
+          handleOnValueChange={(e) => { }}
           error={null}
         />
         <SelectDropdownComponent
-          placeholder={'Do Insurance'}
-          values={[{ id: 0, name: 'coming soon', value: undefined}]}
-          handleOnValueChange={(e) => {}}
+          placeholder={doTranslate('Do Insurance')}
+          values={[{ id: 0, name: doTranslate('coming soon'), value: undefined }]}
+          handleOnValueChange={(e) => { }}
           error={null}
         />
         <FilterShownColumnComponent />
@@ -89,12 +91,13 @@ export const FilterSection = () => {
 
 
 export const FilterShownColumnComponent = () => {
+  const doTranslate = useTranslation(translations);
   const { table } = useListOrders();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="h-9.5">
-          Columns <ChevronDown />
+          {doTranslate('Columns')} <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -119,3 +122,57 @@ export const FilterShownColumnComponent = () => {
     </DropdownMenu>
   );
 };
+
+const translations = {
+  "Filter by Wilayas": {
+    "English": "Filter by Wilayas",
+    "French": "Filtrer par wilayas",
+    "Arabic": "تصفية حسب الولايات"
+  },
+  "all": {
+    "English": "all",
+    "French": "tous",
+    "Arabic": "الكل"
+  },
+  "Filter by Commune": {
+    "English": "Filter by Commune",
+    "French": "Filtrer par commune",
+    "Arabic": "تصفية حسب البلدية"
+  },
+  "Stop Desk": {
+    "English": "Stop Desk",
+    "French": "Point de dépôt",
+    "Arabic": "مكتب التوقف"
+  },
+  "Commune": {
+    "English": "Commune",
+    "French": "Commune",
+    "Arabic": "بلدية"
+  },
+  "Stopdesk": {
+    "English": "Stopdesk",
+    "French": "Point de dépôt",
+    "Arabic": "مكتب التوقف"
+  },
+  "Filter by Status": {
+    "English": "Filter by Status",
+    "French": "Filtrer par statut",
+    "Arabic": "تصفية حسب الحالة"
+  },
+  "coming soon": {
+    "English": "coming soon",
+    "French": "bientôt disponible",
+    "Arabic": "قريباً"
+  },
+  "Do Insurance": {
+    "English": "Do Insurance",
+    "French": "Assurer",
+    "Arabic": "تأمين"
+  },
+  "Columns": {
+    "English": "Columns",
+    "French": "Colonnes",
+    "Arabic": "أعمدة"
+  },
+
+}
