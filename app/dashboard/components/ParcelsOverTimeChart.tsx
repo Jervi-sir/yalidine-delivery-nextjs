@@ -29,35 +29,35 @@ export function ParcelsOverTimeChart() {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    async function fetchChartData() {
-      const currentUserId = 1; // Replace with your actual user ID
+    // async function fetchChartData() {
+    //   const currentUserId = 1; // Replace with your actual user ID
 
-      // Fetch parcels and group by date
-      const parcels = await prisma.parcel.findMany({
-        where: {
-          user_id: currentUserId,
-        },
-        orderBy: {
-          created_at: "asc",
-        },
-      });
+    //   // Fetch parcels and group by date
+    //   const parcels = await prisma.parcel.findMany({
+    //     where: {
+    //       user_id: currentUserId,
+    //     },
+    //     orderBy: {
+    //       created_at: "asc",
+    //     },
+    //   });
 
-      const groupedData = {};
-      parcels.forEach((parcel) => {
-        const date = parcel.created_at.toISOString().split("T")[0]; // Get date string
-        groupedData[date] = (groupedData[date] || 0) + 1;
-      });
+    //   const groupedData = {};
+    //   parcels.forEach((parcel) => {
+    //     const date = parcel.created_at.toISOString().split("T")[0]; // Get date string
+    //     groupedData[date] = (groupedData[date] || 0) + 1;
+    //   });
 
-      // Convert grouped data to array format for recharts
-      const chartDataArray = Object.entries(groupedData).map(([date, count]) => ({
-        date,
-        parcels: count,
-      }));
+    //   // Convert grouped data to array format for recharts
+    //   const chartDataArray = Object.entries(groupedData).map(([date, count]) => ({
+    //     date,
+    //     parcels: count,
+    //   }));
 
-      setChartData(chartDataArray);
-    }
+    //   setChartData(chartDataArray);
+    // }
 
-    fetchChartData();
+    // fetchChartData();
   }, []);
 
   return (

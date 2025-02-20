@@ -17,26 +17,26 @@ export default function ParcelsDeliveredCard() {
   const [parcelsDelivered, setParcelsDelivered] = useState(0);
 
   useEffect(() => {
-    async function fetchParcelsDelivered() {
-      const currentUserId = 1; // Replace with your actual user ID
-      const today = new Date();
-      const startOfWeek = new Date(
-        today.setDate(today.getDate() - today.getDay())
-      ); // Get the first day of the week
+    // async function fetchParcelsDelivered() {
+    //   const currentUserId = 1; // Replace with your actual user ID
+    //   const today = new Date();
+    //   const startOfWeek = new Date(
+    //     today.setDate(today.getDate() - today.getDay())
+    //   ); // Get the first day of the week
 
-      const deliveredParcels = await prisma.parcel.count({
-        where: {
-          user_id: currentUserId,
-          status: "Delivered", // Adjust status as needed
-          occurred_at: {
-            gte: startOfWeek,
-          },
-        },
-      });
-      setParcelsDelivered(deliveredParcels);
-    }
+    //   const deliveredParcels = await prisma.parcel.count({
+    //     where: {
+    //       user_id: currentUserId,
+    //       status: "Delivered", // Adjust status as needed
+    //       occurred_at: {
+    //         gte: startOfWeek,
+    //       },
+    //     },
+    //   });
+    //   setParcelsDelivered(deliveredParcels);
+    // }
 
-    fetchParcelsDelivered();
+    // fetchParcelsDelivered();
   }, []);
 
   return (

@@ -17,25 +17,25 @@ export default function AverageParcelPriceCard() {
   const [averagePrice, setAveragePrice] = useState(0);
 
   useEffect(() => {
-    async function fetchAveragePrice() {
-      const currentUserId = 1; // Replace with your actual user ID
+    // async function fetchAveragePrice() {
+    //   const currentUserId = 1; // Replace with your actual user ID
 
-      const parcels = await prisma.parcel.findMany({
-        where: {
-          user_id: currentUserId,
-        },
-      });
+    //   const parcels = await prisma.parcel.findMany({
+    //     where: {
+    //       user_id: currentUserId,
+    //     },
+    //   });
 
-      if (parcels.length > 0) {
-        const totalPrice = parcels.reduce((sum, parcel) => sum + parcel.price, 0);
-        const avgPrice = totalPrice / parcels.length;
-        setAveragePrice(avgPrice);
-      } else {
-        setAveragePrice(0);
-      }
-    }
+    //   if (parcels.length > 0) {
+    //     const totalPrice = parcels.reduce((sum, parcel) => sum + parcel.price, 0);
+    //     const avgPrice = totalPrice / parcels.length;
+    //     setAveragePrice(avgPrice);
+    //   } else {
+    //     setAveragePrice(0);
+    //   }
+    // }
 
-    fetchAveragePrice();
+    // fetchAveragePrice();
   }, []);
 
   return (

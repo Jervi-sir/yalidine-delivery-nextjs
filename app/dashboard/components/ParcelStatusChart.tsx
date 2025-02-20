@@ -11,32 +11,32 @@ export default function ParcelStatusChart() {
   const [parcelStatusData, setParcelStatusData] = useState([]);
 
   useEffect(() => {
-    async function fetchParcelStatusData() {
-      const currentUserId = 1; // Replace with your actual user ID
+    // async function fetchParcelStatusData() {
+    //   const currentUserId = 1; // Replace with your actual user ID
 
-      const parcels = await prisma.parcel.findMany({
-        where: {
-          user_id: currentUserId,
-        },
-      });
+    //   const parcels = await prisma.parcel.findMany({
+    //     where: {
+    //       user_id: currentUserId,
+    //     },
+    //   });
 
-      const statusCounts = {};
-      parcels.forEach((parcel) => {
-        const status = parcel.status || "Unknown"; // Handle null status
-        statusCounts[status] = (statusCounts[status] || 0) + 1;
-      });
+    //   const statusCounts = {};
+    //   parcels.forEach((parcel) => {
+    //     const status = parcel.status || "Unknown"; // Handle null status
+    //     statusCounts[status] = (statusCounts[status] || 0) + 1;
+    //   });
 
-      const totalParcels = parcels.length;
-      const chartData = Object.entries(statusCounts).map(([status, count]) => ({
-        activity: status,
-        value: (count as any / totalParcels) * 100,
-        fill: `var(--color-${status.toLowerCase()})`, // Customize colors
-      }));
+    //   const totalParcels = parcels.length;
+    //   const chartData = Object.entries(statusCounts).map(([status, count]) => ({
+    //     activity: status,
+    //     value: (count as any / totalParcels) * 100,
+    //     fill: `var(--color-${status.toLowerCase()})`, // Customize colors
+    //   }));
 
-      setParcelStatusData(chartData);
-    }
+    //   setParcelStatusData(chartData);
+    // }
 
-    fetchParcelStatusData();
+    // fetchParcelStatusData();
   }, []);
 
   return (

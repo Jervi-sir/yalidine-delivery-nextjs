@@ -13,17 +13,17 @@ export default function WalletBalanceCard() {
   const [walletBalance, setWalletBalance] = useState(0);
 
   useEffect(() => {
-    async function fetchWalletBalance() {
-      const currentUserId = 1; // Replace with your actual user ID
-      const wallet = await prisma.wallet.findUnique({
-        where: {
-          user_id: currentUserId,
-        },
-      });
-      setWalletBalance(wallet?.balance as any || 0);
-    }
+    // async function fetchWalletBalance() {
+    //   const currentUserId = 1; // Replace with your actual user ID
+    //   const wallet = await prisma.wallet.findUnique({
+    //     where: {
+    //       user_id: currentUserId,
+    //     },
+    //   });
+    //   setWalletBalance(wallet?.balance as any || 0);
+    // }
 
-    fetchWalletBalance();
+    // fetchWalletBalance();
   }, []);
 
   return (

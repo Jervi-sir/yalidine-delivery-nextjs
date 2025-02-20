@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version, // Inject version
+    NEXT_PUBLIC_BRAND: packageJson.brand, // Inject brand
   },
 };
 
