@@ -4,9 +4,8 @@ import { InputComponent } from '../components/InputComponent';
 import { useCreateOrder } from '../createOrderContext';
 import { useTranslation } from '@/provider/language-provider';
 
-export const WeightSection = () => {
+export const WeightSection = ({ errors, data, setData }) => {
   const doTranslate = useTranslation(translations);
-  const { errors, data, setData, } = useCreateOrder();
 
   return (
     <div>

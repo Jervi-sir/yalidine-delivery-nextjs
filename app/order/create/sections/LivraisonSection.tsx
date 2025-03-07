@@ -2,15 +2,13 @@
 import { Label } from '@/components/ui/label';
 import { SelectDropdownComponent } from '../components/SelectDropdownComponent';
 import { InputComponent } from '../components/InputComponent';
-import { useCreateOrder } from '../createOrderContext';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import InputError from '@/components/ui/input-error';
 import { useTranslation } from '@/provider/language-provider';
 
-export const LivraisonSection = () => {
+export const LivraisonSection = ({ wilayas, errors, data, setData, parcel }) => {
   const doTranslate = useTranslation(translations);
-  const { wilayas, errors, data, setData, parcel } = useCreateOrder();
   const [communes, setCommunes] = useState([]);
   const [centers, setCenters] = useState([]);
 

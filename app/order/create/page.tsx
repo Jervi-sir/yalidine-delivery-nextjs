@@ -7,7 +7,6 @@ import { LivraisonSection } from './sections/LivraisonSection';
 import { ColiSection } from './sections/ColiSection';
 import { WeightSection } from './sections/WeightSection';
 import { CreateOrderProvider, useCreateOrder } from "./createOrderContext";
-import { AppHeader } from "@/components/layout/app-header";
 import useHeadbarInsetStore from "@/zustand/headbarInsetStore";
 import { useTranslation } from "@/provider/language-provider";
 
@@ -23,25 +22,28 @@ export default function Page() {
 
 const OrderCreateContent = () => {
   const doTranslate = useTranslation(translations);
-  const { handleSubmit, processing } = useCreateOrder();
+  const { 
+    handleSubmit, processing,
+    data, setData, wilayas, errors, parcel
+  } = useCreateOrder();
   return (
     <>
       <div className='p-4 border rounded-lg shadow-md '>
         <h2 className="text-xl font-bold mb-4">{doTranslate('Create Parcel')}</h2>
         {/*--- Expéditeur ---*/}
-        <ExpediteurSection />
+        <ExpediteurSection data={data} setData={setData} wilayas={wilayas} />
         <Separator className='my-4' />
         {/*--- Destinataire ---*/}
-        <DestinataireSection />
+        <DestinataireSection data={data} setData={setData} errors={errors} />
         <Separator className='my-4' />
         {/*--- Livraison ---*/}
-        <LivraisonSection />
+        <LivraisonSection data={data} setData={setData} wilayas={wilayas} parcel={parcel} errors={errors} />
         <Separator className='my-4' />
         {/*--- Coli ---*/}
-        <ColiSection />
+        <ColiSection data={data} setData={setData} errors={errors} />
         <Separator className='my-4' />
         {/*--- Dimension & poids ---*/}
-        <WeightSection />
+        <WeightSection data={data} setData={setData} errors={errors} />
         <Separator className='my-4' />
 
         <Button className="w-full" onClick={handleSubmit} disabled={false}>

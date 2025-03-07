@@ -1,11 +1,9 @@
 import { Label } from '@/components/ui/label';
 import { SelectDropdownComponent } from '../components/SelectDropdownComponent';
-import { useCreateOrder } from '../createOrderContext';
 import { useTranslation } from '@/provider/language-provider';
 
-export const ExpediteurSection = () => {
+export const ExpediteurSection = ({ wilayas, data, setData }) => {
   const doTranslate = useTranslation(translations);
-  const { wilayas, data, setData } = useCreateOrder()
   return (
     <div className='space-y-2'>
       <Label >{doTranslate('Expéditeur')}</Label>

@@ -3,23 +3,13 @@
 import { Label } from '@/components/ui/label';
 import { InputComponent } from '../components/InputComponent';
 import { CheckboxComponent } from '../components/CheckboxComponent';
-import { useCreateOrder } from '../createOrderContext';
 import { useTranslation } from '@/provider/language-provider';
 
-export const ColiSection = () => {
+export const ColiSection = ({ errors, data, setData }) => {
   const doTranslate = useTranslation(translations);
-  const { errors, data, setData, } = useCreateOrder();
   return (
     <div className='space-y-2'>
       <Label>{doTranslate('Le colis')}</Label>
-      {/* <SelectDropdownComponent
-        label={'Select Product'}
-        placeholder={'Choose product'}
-        values={products}
-        initialValue={data.product_id}
-        handleOnValueChange={(value) => setData('product_id', value)}
-        error={null}
-      /> */}
       <InputComponent
         label={doTranslate('Product Name')}
         placeholder={''}

@@ -1,12 +1,10 @@
 'use client';
 import { Label } from '@/components/ui/label';
 import { InputComponent } from '../components/InputComponent';
-import { useCreateOrder } from '../createOrderContext';
 import { useTranslation } from '@/provider/language-provider';
 
-export const DestinataireSection = () => {
+export const DestinataireSection = ({ errors, data, setData }) => {
   const doTranslate = useTranslation(translations);
-  const { errors, data, setData } = useCreateOrder()
   return (
     <div className='space-y-2'>
       <Label>{doTranslate('Destinataire')}</Label>
