@@ -12,13 +12,13 @@ export const SelectDropdownComponent = ({ label, placeholder, valueKey = 'id', v
   }, [values, initialValueProp, valueKey]);
 
   return (
-    <div className='flex flex-col min-w-[100px] max-w-[150px]'>
+    <div className={`flex flex-col min-w-[100px] max-w-[150px] ${disabled && 'opacity-5'}`}>
       <div className='flex items-center gap-2 border border-input rounded-md'>
         <Select
           value={selectedValue}
           onValueChange={handleOnValueChange}
           disabled={disabled}
-          required
+          required={required}
         >
           <SelectTrigger className="w-full border-none">
             <SelectValue placeholder={placeholder} />

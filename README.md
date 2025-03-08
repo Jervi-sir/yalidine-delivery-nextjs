@@ -1,9 +1,13 @@
 #### env
+.env
+DATABASE_URL="postgresql://postgres:jervi175@localhost:5432/livrihali"
+
+.env.local
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-AUTH_SECRET=""
+AUTH_SECRET="sBHe89ZXCx42QAxX4ntK+h4zolvhQr11fEb5PwA13/8="
 
-DATABASE_URL=postgresql://postgres.
+DATABASE_URL="postgresql://postgres:jervi175@localhost:5432/livrihali"
 
 GUEPEX_API_URL=https://api.guepex.app/v1/parcels/
 GUEPEX_API_ID=

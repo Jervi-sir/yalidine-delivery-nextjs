@@ -15,17 +15,18 @@ model User {
   password_text     String?
   created_at        DateTime            @default(now()) @map(name: "created_at")
   updated_at        DateTime            @updatedAt @map(name: "updated_at")
-  pracels           Parcel[]
+  parcels           Parcel[]
   Wallet            Wallet?
   WithdrawalRequest WithdrawalRequest[]
   PaymentHistory    PaymentHistory[]
 
-  @@map(name: "users")
+  @@map("users")
 }
 
 model Parcel {
   id               Int     @id @default(autoincrement())
-  user_id          Int?     // Foreign key to the User model
+  tracking         String?
+  user_id          Int? // Foreign key to the User model
   order_id         String? @unique
   from_wilaya_id   Int?
   from_wilaya_name String
@@ -42,56 +43,56 @@ model Parcel {
   to_center_id    Int?
   to_center_name  String?
   stopdesk_name   String?
-  is_stopdesk        Boolean
+  is_stopdesk     Boolean
 
   product_list       String
   price              Int
   do_insurance       Boolean
-  declared_value     Int? // Made nullable
-  height             Int? // Made nullable
-  width              Int? // Made nullable
-  length             Int? // Made nullable
-  weight             Float? // Made nullable, using Float for decimal support
+  declared_value     Int?
+  height             Int?
+  width              Int?
+  length             Int?
+  weight             Float?
   freeshipping       Boolean
-  stopdesk_id        Int? // Made nullable
+  stopdesk_id        Int?
   has_exchange       Boolean
-  product_to_collect String? // Made nullable
+  product_to_collect String?
 
-  tracking  String? // Add this line
-  import_id Int? // Add this line
-  label     String? // Add this line
-  labels    String? // Add this line
-  message   String? // Add this line
-  success   Boolean? // Add this line
+  import_id Int?
+  label     String?
+  labels    String?
+  message   String?
+  success   Boolean?
 
-  grouped_tracking String? // Add this line
+  grouped_tracking String?
 
-  taxe_percentage  Decimal? // Add this line
-  taxe_from        Int? // Add this line
-  taxe_retour      Int? // Add this line
-  delivery_fee     Int? // Add this line
-  date_creation    DateTime? // Add this line
-  date_expedition  DateTime? // Add this line
-  date_last_status DateTime? // Add this line
-  last_status      String? // Add this line
-  parcel_type      String? // Add this line
-  parcel_sub_type  String? // Add this line
+  taxe_percentage  Decimal?
+  taxe_from        Int?
+  taxe_retour      Int?
+  delivery_fee     Int?
+  date_creation    DateTime?
+  date_expedition  DateTime?
+  date_last_status DateTime?
+  last_status      String?
+  parcel_type      String?
+  parcel_sub_type  String?
 
-  qr_text String? // Add this line
-  pin     String? // Add this line
+  qr_text String?
+  pin     String?
 
-  status         String? // Add this line
-  payment_id     String? // Add this line
-  payment_status String? // Add this line
-  event_id       String? // Add this line
-  occurred_at    DateTime? // Add this line
+  status         String?
+  payment_id     String?
+  payment_status String?
+  event_id       String?
+  occurred_at    DateTime?
 
   is_printed Boolean @default(false)
 
-  user User? @relation(fields: [user_id], references: [id]) // Relation to User model
+  user User? @relation(fields: [user_id], references: [id])
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  PaymentHistory PaymentHistory[]
 
   @@map("parcels") // Optional:  Map the model to a specific table name
 }
@@ -103,14 +104,13 @@ model Parcel {
  */
 model Wallet {
   id             Int      @id @default(autoincrement())
-  user_id        Int?     @unique
+  user_id        Int      @unique
   crypto_type    String
   wallet_address String
   balance        Decimal  @default(0)
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
-
-  user User? @relation(fields: [user_id], references: [id])
+  user           User?    @relation(fields: [user_id], references: [id])
 
   @@map("wallets")
 }
@@ -126,8 +126,7 @@ model WithdrawalRequest {
   processed_at   DateTime?
   transaction_id String?
   notes          String?
-
-  user User? @relation(fields: [user_id], references: [id])
+  user           User?            @relation(fields: [user_id], references: [id])
 
   @@map("withdrawal_requests")
 }
@@ -139,8 +138,10 @@ model PaymentHistory {
   payment_date   DateTime @default(now())
   description    String?
   transaction_id String?
-
-  user User? @relation(fields: [user_id], references: [id])
+  parcel_id      Int? // Links to Parcel for credit/debit tracking
+  type           String // "CREDIT" or "DEBIT"
+  user           User?    @relation(fields: [user_id], references: [id])
+  parcel         Parcel?  @relation(fields: [parcel_id], references: [id])
 
   @@map("payment_history")
 }

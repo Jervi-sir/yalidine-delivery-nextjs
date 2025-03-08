@@ -7,43 +7,64 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import prisma from "@/prisma/prisma";
 import { useTranslation } from "@/provider/language-provider";
+import axios from 'axios';
 
 export default function WalletBalanceCard() {
-  const [walletBalance, setWalletBalance] = useState(0);
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const doTranslate = useTranslation(translations);
 
   useEffect(() => {
-    // async function fetchWalletBalance() {
-    //   const currentUserId = 1; // Replace with your actual user ID
-    //   const wallet = await prisma.wallet.findUnique({
-    //     where: {
-    //       user_id: currentUserId,
-    //     },
-    //   });
-    //   setWalletBalance(wallet?.balance as any || 0);
-    // }
+    const fetchWalletBalance = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get('/api/wallet/balance', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        setWalletBalance(response.data.balance);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching wallet balance:', err);
+        setError('Failed to load wallet balance');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    // fetchWalletBalance();
+    fetchWalletBalance();
   }, []);
 
   return (
     <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{doTranslate('Wallet Balance')}</CardTitle>
+        <CardTitle className="text-sm font-medium">
+          {doTranslate('Wallet Balance')}
+        </CardTitle>
         <small>{doTranslate('DA')}</small>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{walletBalance} <small>{doTranslate('DA')}</small></div>
+        {isLoading ? (
+          <div className="text-2xl font-bold">Loading...</div>
+        ) : error ? (
+          <div className="text-2xl font-bold text-red-500">{error}</div>
+        ) : (
+          <div className="text-2xl font-bold">
+            {walletBalance.toLocaleString('fr-DZ')} <small>{doTranslate('DA')}</small>
+          </div>
+        )}
         <p className="text-xs text-muted-foreground">
-          {/* +20.1% from last month (replace with actual data) */}
-          {doTranslate('No data available')}
+          {isLoading || error ? doTranslate('No data available') : 'Current balance'}
         </p>
       </CardContent>
     </Card>
   );
 }
+
 const translations = {
   "Wallet Balance": {
     "English": "Wallet Balance",
@@ -59,5 +80,5 @@ const translations = {
     "English": "No data available",
     "French": "Aucune donnée disponible",
     "Arabic": "لا توجد بيانات متاحة"
-  },
-}
+  }
+};

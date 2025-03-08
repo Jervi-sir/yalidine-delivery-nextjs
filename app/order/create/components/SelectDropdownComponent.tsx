@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Separator } from '@/components/ui/separator';
 import React, { useEffect, useState } from 'react';
 
-export const SelectDropdownComponent = ({ label, placeholder, valueKey = 'id', values, initialValue: initialValueProp = undefined, error, handleOnValueChange, disabled = false }) => {
+export const SelectDropdownComponent = ({ label, placeholder, valueKey = 'id', values, initialValue: initialValueProp = undefined, error, handleOnValueChange, disabled = false, required = false }) => {
   const [selectedValue, setSelectedValue] = useState(initialValueProp);
 
   useEffect(() => {
@@ -15,13 +15,14 @@ export const SelectDropdownComponent = ({ label, placeholder, valueKey = 'id', v
 
   return (
     <div className='flex flex-col'>
-      <div className='flex items-center gap-2 border border-input rounded-md'>
+      <div className={`flex items-center gap-2 border border-input rounded-md ${disabled && 'opacity-5'}`}>
         <Label className='pl-2 text-nowrap'>{label}</Label>
         <Separator orientation="vertical" className='h-5 w-0.5' />
         <Select
           value={selectedValue}
           onValueChange={handleOnValueChange}
           disabled={disabled}
+          required={required}
         >
           <SelectTrigger className="w-full border-none">
             <SelectValue placeholder={placeholder} />

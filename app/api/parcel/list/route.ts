@@ -27,8 +27,6 @@ export async function GET(req: NextRequest) {
     const isStopdesk = searchParams.get("isStopdesk");
     const isStopdeskBool =
       isStopdesk === "true" ? true : isStopdesk === "false" ? false : undefined;
-
-    console.log('isStopdesk: ', isStopdesk);
     const status = searchParams.get("status") || undefined;
     const doInsurance = searchParams.get("doInsurance");
     const doInsuranceBool =
@@ -41,8 +39,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const pageSize = perPage;
+    const pageSize = perPage || 10;
     const skip = (page - 1) * pageSize;
+
+    // Start benchmarking
+    const startTime = performance.now();
 
     const [parcels, totalCount] = await prisma.$transaction([
       prisma.parcel.findMany({
@@ -56,24 +57,13 @@ export async function GET(req: NextRequest) {
             ? { do_insurance: doInsuranceBool }
             : {}),
         },
-        orderBy: {
-          created_at: "desc",
-        },
+        orderBy: [
+          { labels: { sort: "asc", nulls: "last" } }, // Sort by labels first, nulls last
+          { id: "desc" }, // Reverse order by id (highest to lowest)
+          { created_at: "desc" }, // Fallback to created_at
+        ],
         skip: skip,
         take: pageSize,
-        // select: {
-        //   firstname: true,
-        //   familyname: true,
-        //   tracking: true,
-        //   to_commune_name: true,
-        //   to_wilaya_name: true,
-        //   is_stopdesk: true,
-        //   do_insurance: true,
-        //   status: true,
-        //   price: true,
-        //   freeshipping: true,
-        //   product_list: true,
-        // },
       }),
       prisma.parcel.count({
         where: {
@@ -89,11 +79,19 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
+    // End benchmarking
+    const endTime = performance.now();
+    const executionTime = endTime - startTime; // Time in milliseconds
+
+    // Log the execution time
+    // console.log(`Database query executed in ${executionTime.toFixed(2)} ms`);
+
     return NextResponse.json({
       data: parcels,
       totalCount,
       currentPage: page,
       totalPages: Math.ceil(totalCount / pageSize),
+      executionTime: executionTime.toFixed(2), // Optionally include in response
     });
   } catch (error) {
     console.error("Error fetching parcels:", error);

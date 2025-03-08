@@ -9,7 +9,8 @@ export const InputComponent = ({
   label, placeholder,
   type = 'text',
   disabled = false,
-  minNumber = 0
+  minNumber = 0,
+  ...props
 }) => {
   return (
     <div className='flex flex-col'>
@@ -24,6 +25,7 @@ export const InputComponent = ({
           className="block w-full border-none"
           min={type === 'number' ? minNumber : undefined}
           disabled={disabled}
+          {...props}
         />
       </div>
       <InputError message={error} className="ml-auto mr-2" />

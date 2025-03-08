@@ -33,8 +33,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isActive: true,
       items: [
         {
-          title: doTranslate('Create'),
+          title: doTranslate('Create Single'),
           url: "/order/create",
+        },
+        {
+          title: doTranslate('Create Multiple'),
+          url: "/order/create/bulk",
         },
         {
           title: doTranslate('List'),

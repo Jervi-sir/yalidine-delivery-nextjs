@@ -4,6 +4,8 @@ import axios from 'axios';
 import { getSession } from 'next-auth/react';
 import { wilayas as locallySavedWilaya } from '@/database/wilayas';
 import { useToast } from '@/hooks/use-toast';
+import { Parcel } from '@prisma/client';
+import { ParcelSuccessModal } from './parcel-success-modal';
 
 const CreateOrderContext = createContext(null);
 
@@ -14,6 +16,8 @@ export function CreateOrderProvider({ children, parcel = null, products = [], in
   const { toast } = useToast();
   const [wilayas, setWilayas] = useState([]);
   const [defaultSelectedFromWilaya, setDefaultSelectedFromWilaya] = useState(undefined);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submittedParcels, setSubmittedParcels] = useState<Parcel[]>([]);
 
   // Set data for a specific parcel by index
   const setData = (index: number, name: keyof FormData, value: string | number | boolean | null) => {
@@ -54,14 +58,15 @@ export function CreateOrderProvider({ children, parcel = null, products = [], in
   // Reset all parcels
   const reset = () => {
     const savedFromWilaya = localStorage.getItem('from_wilaya_id');
-    const resetParcel = {
-      ...initialInput,
-      from_wilaya_id: savedFromWilaya ? parseInt(savedFromWilaya) : null,
-      from_wilaya_name: savedFromWilaya
-        ? locallySavedWilaya.find((w) => w.id === parseInt(savedFromWilaya))?.name
-        : null,
-    };
-    setParcels([resetParcel]);
+    // const resetParcel = {
+    //   ...initialInput,
+    //   from_wilaya_id: savedFromWilaya ? parseInt(savedFromWilaya) : null,
+    //   from_wilaya_name: savedFromWilaya
+    //     ? locallySavedWilaya.find((w) => w.id === parseInt(savedFromWilaya))?.name
+    //     : null,
+    // };
+    // setParcels([resetParcel]);
+    setParcels([]);
     setErrorsJson([{}]);
   };
 
@@ -96,6 +101,7 @@ export function CreateOrderProvider({ children, parcel = null, products = [], in
     e.preventDefault();
     setErrorsJson(parcels.map(() => ({}))); // Reset errors for all parcels
     const session = await getSession();
+
     try {
       setProcessing(true);
       if (parcel) {
@@ -122,8 +128,11 @@ export function CreateOrderProvider({ children, parcel = null, products = [], in
           title: 'Success',
           description: response.data.message,
         });
+        setSubmittedParcels(response.data.parcels);
+        setIsModalOpen(true);
       }
-      reset(); // Reset after successful submission
+
+      // reset(); // Reset after successful submission
     } catch (error) {
       console.error('Error submitting parcels:', error);
       toast({
@@ -147,12 +156,23 @@ export function CreateOrderProvider({ children, parcel = null, products = [], in
     addParcel,
     removeParcel,
     parcel,
-    defaultSelectedFromWilaya
+    defaultSelectedFromWilaya,
+    isModalOpen,
+    submittedParcels,
+    setIsModalOpen
   };
 
   return (
     <CreateOrderContext.Provider value={value}>
       {children}
+      <ParcelSuccessModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          reset();
+          setIsModalOpen(false);
+        }}
+        parcels={submittedParcels}
+      />
     </CreateOrderContext.Provider>
   );
 }

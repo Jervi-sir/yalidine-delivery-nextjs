@@ -1,8 +1,7 @@
-// Example (adjust data fetching as needed)
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -17,48 +16,43 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import prisma from "@/prisma/prisma";
 import { useTranslation } from "@/provider/language-provider";
+import axios from 'axios';
 
 const chartConfig = {
   parcels: {
     label: "Parcels",
+    color: "#2563eb",
   },
 } satisfies ChartConfig;
 
 export function ParcelsOverTimeChart() {
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<{ date: string; parcels: number }[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const doTranslate = useTranslation(translations);
+
   useEffect(() => {
-    // async function fetchChartData() {
-    //   const currentUserId = 1; // Replace with your actual user ID
+    const fetchChartData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get('/api/stats/over-time', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        setChartData(response.data.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching parcels chart data:', err);
+        setError('Failed to load chart data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    //   // Fetch parcels and group by date
-    //   const parcels = await prisma.parcel.findMany({
-    //     where: {
-    //       user_id: currentUserId,
-    //     },
-    //     orderBy: {
-    //       created_at: "asc",
-    //     },
-    //   });
-
-    //   const groupedData = {};
-    //   parcels.forEach((parcel) => {
-    //     const date = parcel.created_at.toISOString().split("T")[0]; // Get date string
-    //     groupedData[date] = (groupedData[date] || 0) + 1;
-    //   });
-
-    //   // Convert grouped data to array format for recharts
-    //   const chartDataArray = Object.entries(groupedData).map(([date, count]) => ({
-    //     date,
-    //     parcels: count,
-    //   }));
-
-    //   setChartData(chartDataArray);
-    // }
-
-    // fetchChartData();
+    fetchChartData();
   }, []);
 
   return (
@@ -67,56 +61,74 @@ export function ParcelsOverTimeChart() {
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>{doTranslate('Parcels Over Time')}</CardTitle>
           <CardDescription>
-            {doTranslate('Number of parcels created over time')}
+            {isLoading 
+              ? doTranslate('Loading...')
+              : error 
+              ? doTranslate('Error loading data')
+              : doTranslate('Number of parcels created over time')}
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+        {error ? (
+          <div className="flex items-center justify-center h-[250px] text-red-500">
+            {error}
+          </div>
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[250px] w-full"
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                });
+            <BarChart
+              accessibilityLayer
+              data={chartData}
+              margin={{
+                left: 12,
+                right: 12,
               }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-[150px]"
-                  nameKey="parcels"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    });
-                  }}
-                />
-              }
-            />
-            <Bar dataKey="parcels" fill={`var(--color-parcels)`} />
-          </BarChart>
-        </ChartContainer>
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={8}
+                tickFormatter={(value) => {
+                  const date = new Date(value);
+                  return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  });
+                }}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    className="w-[150px]"
+                    nameKey="parcels"
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      });
+                    }}
+                  />
+                }
+              />
+              <Bar 
+                dataKey="parcels" 
+                fill={chartConfig.parcels.color} 
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );
@@ -133,5 +145,14 @@ const translations = {
     "French": "Nombre de colis créés au fil du temps",
     "Arabic": "عدد الطرود التي تم إنشاؤها بمرور الوقت"
   },
-
-}
+  "Loading...": {
+    "English": "Loading...",
+    "French": "Chargement...",
+    "Arabic": "جار التحميل..."
+  },
+  "Error loading data": {
+    "English": "Error loading data",
+    "French": "Erreur de chargement des données",
+    "Arabic": "خطأ في تحميل البيانات"
+  }
+};

@@ -12,7 +12,7 @@ import { ShowPrintBulkConfirmation } from './show-print-bulk-confirmation';
 const ListOrdersContext = createContext(null);
 
 export function ListOrdersProvider({ children, products = [] }) {
-  const perPage = 7;
+  const perPage = 20;
   const [userId, setUserId] = useState(null);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -100,6 +100,11 @@ export function ListOrdersProvider({ children, products = [] }) {
     onRowSelectionChange: setRowSelection,
     state: { sorting, columnFilters, columnVisibility, rowSelection },  //, columnOrder
     onColumnOrderChange: setColumnOrder,
+    initialState: {
+      pagination: {
+        pageSize: perPage + 1
+      }
+    }
   });
 
   const [showBulkPrintParcels, setShowBulkPrintParcels] = useState(false);
@@ -178,17 +183,23 @@ export function ListOrdersProvider({ children, products = [] }) {
 
       const newBulkUrl = fetchedParcels[0].labels || null;
       const newSingleUrl = fetchedParcels[0].label || null;
-      if(newBulkUrl) {
-        window.location.href = newBulkUrl; 
+      if (newBulkUrl) {
+        window.location.href = newBulkUrl;
       } else {
-        window.location.href = newSingleUrl; 
+        window.location.href = newSingleUrl;
       }
-      
+
 
     } catch (error) {
       console.error('error: ', error);
     }
   }
+
+  // New function to remove a parcel by ID
+  const removeParcelById = (id: number) => {
+    setData((prevData) => prevData.filter((parcel) => parcel.id !== id));
+    setTotalCount((prevCount) => prevCount - 1); // Update total count
+  };
 
   const value = {
     table, totalPages,
@@ -200,13 +211,21 @@ export function ListOrdersProvider({ children, products = [] }) {
     doInsuranceFilter, setDoInsuranceFilter,
     isLoadingData,
     showThisParcel, editThisParcel,
-    handlePrint, showThisBulkPrint, handleShowPrintBulkConfirmation
+    handlePrint, showThisBulkPrint, handleShowPrintBulkConfirmation,
+    removeParcelById
   };
 
   return (
     <ListOrdersContext.Provider value={value}>
       {children}
-      {showViewParcelDialog && <ViewParcelDialog parcel={selectedParcelToView} open={showViewParcelDialog} onOpenChange={handleShowViewParcelDialog} />}
+      {showViewParcelDialog && (
+        <ViewParcelDialog
+          parcel={selectedParcelToView}
+          open={showViewParcelDialog}
+          onOpenChange={handleShowViewParcelDialog}
+          onDeleteSuccess={removeParcelById} // Pass the callback
+        />
+      )}
       {showEditParcelDialog
         && <EditParcelDialog
           parcel={selectedParcelToEdit}
@@ -222,12 +241,12 @@ export function ListOrdersProvider({ children, products = [] }) {
         />
       }
 
-      { showPrintBulkConfirmation &&
-        <ShowPrintBulkConfirmation 
-          parcels={selectedParcels} 
-          open={showPrintBulkConfirmation} 
-          onOpenChange={() => setShowPrintBulkConfirmation(false)} 
-          handleOnConfirm={handlePrint} 
+      {showPrintBulkConfirmation &&
+        <ShowPrintBulkConfirmation
+          parcels={selectedParcels}
+          open={showPrintBulkConfirmation}
+          onOpenChange={() => setShowPrintBulkConfirmation(false)}
+          handleOnConfirm={handlePrint}
         />
       }
 
@@ -242,37 +261,3 @@ export const useListOrders = () => {
   }
   return context;
 };
-
-
-// const printAllUrls = async (parcelsToPrint) => {
-//   for (const url of parcelsToPrint) {
-//     try {
-//       await printSingleUrl(url);
-//     } catch (error) {
-//       console.error(`Failed to print ${url}:`, error);
-//     }
-//   }
-// };
-// // Function to open and print a single URL
-// const printSingleUrl = (url) => {
-//   return new Promise((resolve: any, reject) => {
-//     const iframe = document.createElement('iframe');
-//     iframe.style.display = 'none';
-//     iframe.src = url;
-//     document.body.appendChild(iframe);
-//     iframe.onload = () => {
-//       try {
-//         iframe.contentWindow.print();
-//         resolve();
-//       } catch (error) {
-//         reject(error);
-//       }
-//       document.body.removeChild(iframe);
-//     };
-//     iframe.onerror = (error) => {
-//       reject(error);
-//       document.body.removeChild(iframe);
-//     };
-//   });
-// };
-

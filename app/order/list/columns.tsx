@@ -170,9 +170,9 @@ export const columns: ColumnDef<Parcel>[] = [
               <DropdownMenuItem onClick={() => showThisParcel(parcel)}>
                 View parcel details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => editThisParcel(parcel)}>
+              {/* <DropdownMenuItem onClick={() => editThisParcel(parcel)}>
                 Edit parcel details
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </>

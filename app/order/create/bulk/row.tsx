@@ -23,7 +23,7 @@ export const ParcelRow = ({ wilayas, errors = {} as any, parcel, index }) => {
           variant="destructive"
           size="icon"
           onClick={() => removeParcel(index)}
-          disabled={parcels.length === 1} // Prevent removing the last parcel
+          // disabled={parcels.length === 1} // Prevent removing the last parcel
         >
           <TrashIcon />
         </Button>
@@ -49,8 +49,8 @@ const SenderSection = ({ data, index }) => {
   useEffect(() => {
     if (defaultSelectedFromWilaya) {
       setTimeout(() => {
-        setData(index, 'from_wilaya_id', parseInt(defaultSelectedFromWilaya))
-        setData(index, 'from_wilaya_name', wilayas.find((w) => w.id === defaultSelectedFromWilaya)?.name || undefined)
+        setData(index, 'from_wilaya_name', wilayas.find((w) => w.id === parseInt(defaultSelectedFromWilaya.toString()))?.name || undefined)
+        setData(index, 'from_wilaya_id', parseInt(defaultSelectedFromWilaya.toString()))
       }, 300);
     }
   }, [defaultSelectedFromWilaya])
@@ -64,12 +64,13 @@ const SenderSection = ({ data, index }) => {
         initialValue={data?.from_wilaya_id}
         error={errors.from_wilaya_id}
         handleOnValueChange={(wilayaId) => {
-          setData(index, 'from_wilaya_name', wilayas.find((w) => w.id === wilayaId)?.name || '');
+          setData(index, 'from_wilaya_name', wilayas.find((w) => w.id === parseInt(wilayaId.toString()))?.name || '');
           setData(index, 'from_wilaya_id', wilayaId);
           setTimeout(() => {
             localStorage.setItem('from_wilaya_id', wilayaId);
           }, 200);
         }}
+        required={true}
       />
     </TableCell>
   )
@@ -95,7 +96,7 @@ const RecipientSection = ({ data, index }) => {
           value={data?.familyName}
           handleOnChange={(e) => setData(index, 'familyName', e.target.value)}
           error={errors.familyName}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -105,7 +106,7 @@ const RecipientSection = ({ data, index }) => {
           value={data?.firstName}
           handleOnChange={(e) => setData(index, 'firstName', e.target.value)}
           error={errors.firstName}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -118,7 +119,9 @@ const RecipientSection = ({ data, index }) => {
           pattern="[0-9]*" // HTML5 pattern for numbers only
           inputMode="numeric" // Hint for numeric keyboard on mobile
           error={errors.contactPhone}
-          required={false}
+          required={true}
+          minLength={10}
+          maxLength={10}
         />
       </TableCell>
     </React.Fragment>
@@ -196,14 +199,14 @@ const DeliverySection = ({ data, parcel, index }) => {
         <SelectDropdownComponent
           label={doTranslate('Delivery Type')}
           placeholder={''}
-          initialValue={data?.is_stopdesk ?? false} // Default to false if undefined/null
+          initialValue={data?.is_stopdesk ?? undefined} // Default to false if undefined/null
           values={[
             { id: false, name: 'Commune' },
             { id: true, name: 'Stopdesk' },
           ]}
           handleOnValueChange={handleDeliveryTypeChange}
           error={errors.is_stopdesk}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -215,14 +218,14 @@ const DeliverySection = ({ data, parcel, index }) => {
           handleOnValueChange={(value) => {
             console.log(`[${index}] Setting to_wilaya_id to:`, value); // Debug log
             setData(index, 'to_wilaya_id', value);
-            setData(index, 'to_wilaya_name', wilayas.find((w) => w.id === value)?.name || '');
+            setData(index, 'to_wilaya_name', wilayas.find((w) => w.id === parseInt(value.toString()))?.name || '');
             setData(index, 'to_commune_id', undefined);
             setData(index, 'to_center_id', undefined);
             setData(index, 'address', '');
           }}
           error={errors.to_wilaya_id}
           disabled={data?.is_stopdesk === undefined}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -234,13 +237,13 @@ const DeliverySection = ({ data, parcel, index }) => {
           handleOnValueChange={(value) => {
             console.log(`[${index}] Setting to_commune_id to:`, value); // Debug log
             setData(index, 'to_commune_id', value);
-            setData(index, 'to_commune_name', communes.find((c) => c.id === value)?.name || '');
+            setData(index, 'to_commune_name', communes.find((c) => c.id === parseInt(value.toString()))?.name || '');
             setData(index, 'to_center_id', undefined);
             setData(index, 'address', '');
           }}
           error={errors.to_commune_id}
           disabled={!data?.to_wilaya_id}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -257,7 +260,8 @@ const DeliverySection = ({ data, parcel, index }) => {
             setData(index, 'address', centerName);
           }}
           error={errors.to_center_id}
-          disabled={!data?.to_commune_id}
+          disabled={!data?.to_commune_id || (data?.is_stopdesk.toString() !== 'true')}
+          required={data?.to_commune_id && data?.is_stopdesk.toString() === 'true'}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -268,6 +272,7 @@ const DeliverySection = ({ data, parcel, index }) => {
           handleOnChange={(e) => setData(index, 'address', e.target.value)}
           error={errors.address}
           disabled={!data?.to_wilaya_id}
+          required={true}
         />
       </TableCell>
     </React.Fragment>
@@ -287,7 +292,7 @@ const ParcelSection = ({ data, index }) => {
           value={data?.product_list}
           handleOnChange={(e) => setData(index, 'product_list', e.target.value)}
           error={errors.product_list}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -299,7 +304,7 @@ const ParcelSection = ({ data, index }) => {
           type="number"
           minNumber={1}
           error={errors.price}
-          required={false}
+          required={true}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -320,14 +325,12 @@ const DimensionSection = ({ data, index }) => {
 
   return (
     <React.Fragment>
-      <TableCell className="p-0 pr-1 pt-1 w-[120px]">
-        <RadioGroupComponent
-          initialValue={data?.more_then_5kg}
-          values={[
-            { id: false, name: doTranslate('Non') },
-            { id: true, name: doTranslate('Oui') },
-          ]}
-          handleOnValueChange={(e) => setData(index, 'more_then_5kg', e)}
+      <TableCell className="p-0 pr-1 pt-1 w-[50px]">
+        <CheckboxComponent
+          label={''}
+          onChange={(checked) => setData(index, 'more_then_5kg', checked)}
+          checked={data?.more_then_5kg}
+          error={null}
         />
       </TableCell>
       <TableCell className="p-0 pr-1 pt-1 w-[120px]">
@@ -336,34 +339,38 @@ const DimensionSection = ({ data, index }) => {
             <InputComponent
               label={doTranslate('Longueur en CM')}
               type="number"
-              placeholder={''}
+              placeholder={'Longueur'}
               value={data?.order_length}
               handleOnChange={(e) => setData(index, 'order_length', e.target.value)}
               error={errors.order_length}
+              required={data?.more_then_5kg?.toString() === 'true'}
             />
             <InputComponent
               label={doTranslate('Largeur en CM')}
               type="number"
-              placeholder={''}
+              placeholder={'Largeur'}
               value={data?.order_width}
               handleOnChange={(e) => setData(index, 'order_width', e.target.value)}
               error={errors.order_width}
+              required={data?.more_then_5kg?.toString() === 'true'}
             />
             <InputComponent
               label={doTranslate('Hauteur en CM')}
               type="number"
-              placeholder={''}
+              placeholder={'Hauteur'}
               value={data?.order_height}
               handleOnChange={(e) => setData(index, 'order_height', e.target.value)}
               error={errors.order_height}
+              required={data?.more_then_5kg?.toString() === 'true'}
             />
             <InputComponent
               label={doTranslate('Poids en KG')}
               type="number"
-              placeholder={''}
+              placeholder={'Poids KG'}
               value={data?.order_weight}
               handleOnChange={(e) => setData(index, 'order_weight', e.target.value)}
               error={errors.order_weight}
+              required={data?.more_then_5kg?.toString() === 'true'}
             />
           </>
         )}

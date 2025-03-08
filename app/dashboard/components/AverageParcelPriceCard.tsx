@@ -1,4 +1,3 @@
-// Example (adjust data fetching as needed)
 "use client";
 
 import { Bar, BarChart, Rectangle, XAxis } from "recharts";
@@ -11,53 +10,66 @@ import {
 } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import prisma from "@/prisma/prisma";
 import { useTranslation } from "@/provider/language-provider";
+import axios from 'axios';
 
-export default function AverageParcelPriceCard() {
-  const [averagePrice, setAveragePrice] = useState(0);
+export default function ReturnedParcelsCard() {
+  const [returnedCount, setReturnedCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const doTranslate = useTranslation(translations);
 
   useEffect(() => {
-    // async function fetchAveragePrice() {
-    //   const currentUserId = 1; // Replace with your actual user ID
+    const fetchReturnedCount = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get('/api/stats/returned', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        setReturnedCount(response.data.count);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching returned parcels:', err);
+        setError('Failed to load data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    //   const parcels = await prisma.parcel.findMany({
-    //     where: {
-    //       user_id: currentUserId,
-    //     },
-    //   });
-
-    //   if (parcels.length > 0) {
-    //     const totalPrice = parcels.reduce((sum, parcel) => sum + parcel.price, 0);
-    //     const avgPrice = totalPrice / parcels.length;
-    //     setAveragePrice(avgPrice);
-    //   } else {
-    //     setAveragePrice(0);
-    //   }
-    // }
-
-    // fetchAveragePrice();
+    fetchReturnedCount();
   }, []);
+
+  // Sample data for the chart (you might want to fetch real trend data)
+  const chartData = [
+    { date: "Mon", count: 2 },
+    { date: "Tue", count: 1 },
+    { date: "Wed", count: 3 },
+    { date: "Thu", count: 0 },
+    { date: "Fri", count: 2 },
+    { date: "Sat", count: 1 },
+    { date: "Sun", count: returnedCount },
+  ];
 
   return (
     <Card className="h-full">
       <CardHeader className="p-4 pb-0">
-        <CardTitle>{doTranslate('Average Parcel Price')}</CardTitle>
+        <CardTitle>{doTranslate('Returned Parcels')}</CardTitle>
         <CardDescription>
-          {doTranslate('Average price of your parcels over all time.')}
+          {doTranslate('Number of parcels returned this week')}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
         <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-          {averagePrice.toFixed(2)}
-          <small>{doTranslate('DA')}</small>
+          {isLoading ? '...' : error ? '!' : returnedCount}
         </div>
         <ChartContainer
           config={{
-            steps: {
-              label: "Steps",
-              color: "hsl(var(--chart-1))",
+            count: {
+              label: "Returns",
+              color: "hsl(var(--chart-2))",
             },
           }}
           className="ml-auto w-[72px]"
@@ -70,40 +82,11 @@ export default function AverageParcelPriceCard() {
               top: 0,
               bottom: 0,
             }}
-            data={[
-              {
-                date: "2024-01-01",
-                steps: 2000,
-              },
-              {
-                date: "2024-01-02",
-                steps: 2100,
-              },
-              {
-                date: "2024-01-03",
-                steps: 2200,
-              },
-              {
-                date: "2024-01-04",
-                steps: 1300,
-              },
-              {
-                date: "2024-01-05",
-                steps: 1400,
-              },
-              {
-                date: "2024-01-06",
-                steps: 2500,
-              },
-              {
-                date: "2024-01-07",
-                steps: 1600,
-              },
-            ]}
+            data={chartData}
           >
             <Bar
-              dataKey="steps"
-              fill="var(--color-steps)"
+              dataKey="count"
+              fill="var(--color-count)"
               radius={2}
               fillOpacity={0.2}
               activeIndex={6}
@@ -123,22 +106,15 @@ export default function AverageParcelPriceCard() {
   );
 }
 
-
 const translations = {
-  "Average Parcel Price": {
-    "English": "Average Parcel Price",
-    "French": "Prix moyen des colis",
-    "Arabic": "متوسط سعر الطرود"
+  "Returned Parcels": {
+    "English": "Returned Parcels",
+    "French": "Colis retournés",
+    "Arabic": "الطرود المرجعة"
   },
-  "Average price of your parcels over all time.": {
-    "English": "Average price of your parcels over all time.",
-    "French": "Prix moyen de vos colis sur toute la durée.",
-    "Arabic": "متوسط سعر الطرود الخاصة بك على مر الزمن."
+  "Number of parcels returned this week": {
+    "English": "Number of parcels returned this week",
+    "French": "Nombre de colis retournés cette semaine",
+    "Arabic": "عدد الطرود المرجعة هذا الأسبوع"
   },
-  "DA": {
-    "English": "DA",
-    "French": "DA",
-    "Arabic": "دج"
-  },
-
-}
+};

@@ -121,3 +121,131 @@ export async function PUT(req: Request, { params }: { params: Params }) {
     return NextResponse.json({ message: 'Failed to update parcel', error: error.message }, { status: 500 });
   }
 }
+
+
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  const parcelId = parseInt(params.id.toString());
+
+  if (isNaN(parcelId)) {
+    return NextResponse.json({ error: "Invalid parcel ID" }, { status: 400 });
+  }
+
+  try {
+    // Check authentication
+    const session: any = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if the parcel exists
+    const parcel = await prisma.parcel.findUnique({
+      where: { id: parcelId },
+    });
+
+    if (!parcel) {
+      return NextResponse.json({ error: "Parcel not found" }, { status: 404 });
+    }
+
+    // Guepex API configuration
+    const guepexApiUrl = process.env.GUEPEX_API_URL; // e.g., "https://api.guepex.com/v1/parcels/"
+    const guepexApiId = process.env.GUEPEX_API_ID;
+    const guepexApiToken = process.env.GUEPEX_API_TOKEN;
+
+    if (!guepexApiId || !guepexApiToken || !guepexApiUrl) {
+      console.error("Guepex API credentials or URL not found in environment variables.");
+      return NextResponse.json(
+        { error: "Guepex API credentials or URL missing" },
+        { status: 500 }
+      );
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // Check if the parcel exists
+      const parcel = await tx.parcel.findUnique({
+        where: { id: parcelId },
+      });
+
+      if (!parcel) {
+        throw new Error("Parcel not found");
+      }
+
+      // Check if money was credited via PaymentHistory
+      const creditEntry = await tx.paymentHistory.findFirst({
+        where: {
+          parcel_id: parcel.id,
+          type: "CREDIT",
+        },
+      });
+
+      // If money was credited, debit the wallet
+      if (creditEntry) {
+        const amountToDebit = creditEntry.amount;
+        const wallet = await tx.wallet.findUnique({ where: { user_id: parcel.user_id } });
+
+        if (wallet) {
+          if (wallet.balance < amountToDebit) {
+            throw new Error("Insufficient wallet balance to debit");
+          }
+
+          // Debit wallet
+          await tx.wallet.update({
+            where: { user_id: parcel.user_id },
+            data: { balance: { decrement: amountToDebit } },
+          });
+
+          // Log debit in payment history
+          await tx.paymentHistory.create({
+            data: {
+              user_id: parcel.user_id,
+              amount: amountToDebit,
+              description: `Debit due to deletion of parcel ${parcel.tracking || parcel.id}`,
+              parcel_id: parcel.id,
+              type: "DEBIT",
+            },
+          });
+
+          console.log(`Debited ${amountToDebit} from user ${parcel.user_id} for parcel ${parcel.tracking || parcel.id}`);
+        }
+      }
+
+      // If the parcel has a tracking number, delete it from Guepex
+      if (parcel.tracking) {
+        const guepexDeleteUrl = `${guepexApiUrl}${parcel.tracking}`; // e.g., "https://api.guepex.com/v1/parcels/yal-123456"
+
+        const guepexResponse = await axios.delete(guepexDeleteUrl, {
+          headers: {
+            "X-API-ID": guepexApiId,
+            "X-API-TOKEN": guepexApiToken,
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log("guepexResponse: ", guepexResponse.data);
+
+        if (guepexResponse.status < 200 || guepexResponse.status >= 300) {
+          console.error("Failed to delete parcel from Guepex:", guepexResponse.data);
+          throw new Error("Failed to delete parcel from Guepex");
+        }
+      }
+
+      // Delete the parcel from local database
+      await tx.parcel.delete({
+        where: { id: parcelId },
+      });
+    });
+
+    return NextResponse.json(
+      { message: "Parcel deleted successfully from both local database and Guepex" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting parcel:", error);
+    return NextResponse.json(
+      { error: "Failed to delete parcel" },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+

@@ -4,14 +4,10 @@ import { Parcel } from "@prisma/client";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import * as React from "react";
 import { Separator } from "@/components/ui/separator";
-import { ExpediteurSection } from "../create/sections/ExpediteurSection";
-import { DestinataireSection } from "../create/sections/DestinataireSection";
-import { LivraisonSection } from "../create/sections/LivraisonSection";
 import { CreateOrderProvider, useCreateOrder } from "../create/createOrderContext";
-import { ColiSection } from "../create/sections/ColiSection";
-import { WeightSection } from "../create/sections/WeightSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTranslation } from "@/provider/language-provider";
+import { ColiSection, DestinataireSection, ExpediteurSection, LivraisonSection, WeightSection } from "../create/page";
 
 export function EditParcelDialog({ parcel, open, onOpenChange, handleOnUpdateParcel }) {
   return (
@@ -25,7 +21,7 @@ export function EditParcelDialog({ parcel, open, onOpenChange, handleOnUpdatePar
 
 const FormBody = ({ parcel, onOpenChange, handleOnUpdateParcel }) => {
   const doTranslate = useTranslation(translations);
-  const { handleSubmit, processing } = useCreateOrder();
+  const { data, setData, wilayas, handleSubmit, processing, errors } = useCreateOrder();
   return (
     <>
       <DialogContent className="sm:max-w-[525px]">
@@ -34,19 +30,19 @@ const FormBody = ({ parcel, onOpenChange, handleOnUpdateParcel }) => {
         </DialogHeader>
         <ScrollArea className="h-72 rounded-md pr-3">
           {/*--- Expéditeur ---*/}
-          <ExpediteurSection />
+          <ExpediteurSection data={data} setData={setData} wilayas={wilayas} />
           <Separator className='my-4' />
           {/*--- Destinataire ---*/}
-          <DestinataireSection />
+          <DestinataireSection data={data} setData={setData} errors={errors} />
           <Separator className='my-4' />
           {/*--- Livraison ---*/}
-          <LivraisonSection />
+          <LivraisonSection data={data} setData={setData} wilayas={wilayas} parcel={parcel} errors={errors} />
           <Separator className='my-4' />
           {/*--- Coli ---*/}
-          <ColiSection />
+          <ColiSection data={data} setData={setData} errors={errors} />
           <Separator className='my-4' />
           {/*--- Dimension & poids ---*/}
-          <WeightSection />
+          <WeightSection data={data} setData={setData} errors={errors} />
           <Separator className='my-4' />
         </ScrollArea>
         <DialogFooter>
